@@ -1,0 +1,30 @@
+RUNNING SIMULATION: XSize=8   iterations=100   pMin=0.025   pMax=0.03   pStep=0.001
+ERROR [%]:						SUCCESS [%]
+Level	Effective	per_Step	Syndrome	Success
+2.5	16.829		2.5		2.5		94
+2.6	17.384		2.6		2.6		91
+2.7	17.93		2.7		2.7		94
+2.8	18.468		2.8		2.8		92
+2.9	18.999		2.9		2.9		90
+3	19.522		3		3		90
+RUNNING SIMULATION: XSize=16   iterations=100   pMin=0.025   pMax=0.03   pStep=0.001
+ERROR [%]:						SUCCESS [%]
+Level	Effective	per_Step	Syndrome	Success
+2.5	27.994		2.5		2.5		95
+2.6	28.723		2.6		2.6		98
+2.7	29.43		2.7		2.7		92
+2.8	30.115		2.8		2.8		94
+2.9	30.779		2.9		2.9		92
+3	31.421		3		3		85
+RUNNING SIMULATION: XSize=20   iterations=100   pMin=0.025   pMax=0.03   pStep=0.001
+ERROR [%]:						SUCCESS [%]
+Level	Effective	per_Step	Syndrome	Success
+2.5	32.076		2.5		2.5		98
+2.6	32.816		2.6		2.6		97
+2.7	33.526		2.7		2.7		92
+2.8	34.209		2.8		2.8		95
+2.9	34.865		2.9		2.9		91
+3	35.495		3		3		90
+RUNNING SIMULATION: XSize=32   iterations=100   pMin=0.025   pMax=0.03   pStep=0.001
+ERROR [%]:						SUCCESS [%]
+Level	Effective	per_Step	Syndrome	Success

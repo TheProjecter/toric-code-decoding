@@ -1,0 +1,41 @@
+==13081== Memcheck, a memory error detector
+==13081== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==13081== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==13081== Command: ./qecsim
+==13081== Parent PID: 12896
+==13081== 
+==13081== Thread 2:
+==13081== Mismatched free() / delete / delete []
+==13081==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13081==    by 0x404DE1: Simulation::run() [clone ._omp_fn.0] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13081==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13081==    by 0x5D80A0C: clone (clone.S:113)
+==13081==  Address 0x6054c60 is 0 bytes inside a block of size 32 alloc'd
+==13081==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13081==    by 0x40354D: Lattice::Lattice(int, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x404DB8: Simulation::run() [clone ._omp_fn.0] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13081==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13081==    by 0x5D80A0C: clone (clone.S:113)
+==13081== 
+==13081== Thread 1:
+==13081== Mismatched free() / delete / delete []
+==13081==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13081==    by 0x404DE1: Simulation::run() [clone ._omp_fn.0] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x406334: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x4028C0: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==  Address 0x611f060 is 0 bytes inside a block of size 32 alloc'd
+==13081==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13081==    by 0x40354D: Lattice::Lattice(int, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x404DB8: Simulation::run() [clone ._omp_fn.0] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x406334: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081==    by 0x4028C0: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_perfect_toric/qecsim)
+==13081== 
+==13081== 
+==13081== More than 10000000 total errors detected.  I'm not reporting any more.
+==13081== Final error counts will be inaccurate.  Go fix your program!
+==13081== Rerun with --error-limit=no to disable this cutoff.  Note
+==13081== that errors may occur in your program without prior warning from
+==13081== Valgrind, because errors are no longer being displayed.
+==13081== 

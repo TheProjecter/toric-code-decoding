@@ -1,0 +1,5 @@
+RUNNING SIMULATION:   XSize=8   iterations=100000   pMin=0.02   pMax=0.03   pStep=0.001
+ERROR [%]:							SUCCESS [%]
+Level	Effective	per_Step	SQR	OCT	Success
+2	13.931		2		2	2		98.704
+2.1	14.527		2.1		2.1	2.1		98.117

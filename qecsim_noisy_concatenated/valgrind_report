@@ -1,0 +1,438 @@
+==13000== Memcheck, a memory error detector
+==13000== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==13000== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==13000== Command: ./qecsim
+==13000== Parent PID: 12896
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x40B5B7: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0x60541f0 is 0 bytes inside a block of size 36 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40A93D: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x40B5C9: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0x6054130 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40A902: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x40B5DA: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0x6054070 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40A8C7: Simulation::Distance(int, int, double, double, double) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C039: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Thread 4:
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080AE: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb72b400 is 0 bytes inside a block of size 1,056 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407C29: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080BE: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa462b90 is 0 bytes inside a block of size 2,112 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407C0F: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080EC: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb658af0 is 0 bytes inside a block of size 9 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4079B9: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080FD: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb658b40 is 0 bytes inside a block of size 36 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4079E1: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408113: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb658970 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40796D: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408120: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb658a30 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40797E: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x40812F: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb6587f0 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407937: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408139: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xb6588b0 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407948: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408794: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa5a0d30 is 0 bytes inside a block of size 32 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4083B7: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087A4: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa4ea9f0 is 0 bytes inside a block of size 32 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40839C: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087D4: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa1297c0 is 0 bytes inside a block of size 9 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40821F: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087F1: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0x9eb1590 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4081EC: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408801: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa505bf0 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4081BC: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408B4A: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000==  Address 0xa384620 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x404CD1: Lattice::Lattice(int, int) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B06: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x564C869: ??? (in /usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0)
+==13000==    by 0x5A70F8D: start_thread (pthread_create.c:311)
+==13000==    by 0x5D80A0C: clone (clone.S:113)
+==13000== 
+==13000== Thread 1:
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080AE: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb578310 is 0 bytes inside a block of size 1,128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407C29: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080BE: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb577a00 is 0 bytes inside a block of size 2,256 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407C0F: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080EC: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413d20 is 0 bytes inside a block of size 9 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4079B9: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4080FD: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413d70 is 0 bytes inside a block of size 36 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4079E1: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408113: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413ba0 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40796D: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408120: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413c60 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40797E: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x40812F: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413a20 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407937: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408139: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb413ae0 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x407948: Lattice::evolute_and_correct(double, double, double, float**) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B23: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408794: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xa7aa3c0 is 0 bytes inside a block of size 32 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4083B7: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087A4: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xa7b32c0 is 0 bytes inside a block of size 32 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40839C: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087D4: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xa64e5d0 is 0 bytes inside a block of size 9 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x40821F: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x4087F1: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xa61ac40 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4081EC: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408801: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0xb3df720 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x4081BC: Lattice::perfect_correction() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B2D: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== Mismatched free() / delete / delete []
+==13000==    at 0x4C2B1BF: operator delete(void*) (vg_replace_malloc.c:480)
+==13000==    by 0x408B4A: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==  Address 0x9f88360 is 0 bytes inside a block of size 128 alloc'd
+==13000==    at 0x4C2BAD7: operator new[](unsigned long) (vg_replace_malloc.c:363)
+==13000==    by 0x404CD1: Lattice::Lattice(int, int) (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x408B06: Simulation::run() [clone ._omp_fn.1] (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x40C0DE: Simulation::run() (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000==    by 0x402D00: main (in /home/dcriger/Documents/2013/November/Toric Code Simulation/qecsim_software/qecsim_noisy_concatenated/qecsim)
+==13000== 
+==13000== 
+==13000== More than 10000000 total errors detected.  I'm not reporting any more.
+==13000== Final error counts will be inaccurate.  Go fix your program!
+==13000== Rerun with --error-limit=no to disable this cutoff.  Note
+==13000== that errors may occur in your program without prior warning from
+==13000== Valgrind, because errors are no longer being displayed.
+==13000== 
