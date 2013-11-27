@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd qecsim_noisy_concatenated
+make clean
+make
+./qecsim
+cd ../qecsim_noisy_toric
+make clean
+make
+./qecsim
+cd ../qecsim_perfect_concatenated
+make clean
+make
+./qecsim
+cd ../qecsim_perfect_toric
+make clean
+make
+./qecsim

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+gprof qecsim_noisy_concatenated/qecsim | gprof2dot.py | dot -Tsvg -o noisy_concatenated_cg.svg
+gprof qecsim_noisy_toric/qecsim | gprof2dot.py | dot -Tsvg -o noisy_toric_cg.svg
+gprof qecsim_perfect_concatenated/qecsim | gprof2dot.py | dot -Tsvg -o perfect_concatenated_cg.svg
+gprof qecsim_perfect_toric/qecsim | gprof2dot.py | dot -Tsvg -o perfect_toric_cg.svg

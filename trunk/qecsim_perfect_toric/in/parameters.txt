@@ -1,0 +1,5 @@
+XSize = 16
+iterations = 1000
+pMin = 0.02
+pMax = 0.03
+pStep = 0.001
