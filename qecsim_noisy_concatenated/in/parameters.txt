@@ -1,4 +1,4 @@
-XSize = 16
+XSize = 24
 iterations = 1000
 pMin = 0.02
 pMax = 0.03
