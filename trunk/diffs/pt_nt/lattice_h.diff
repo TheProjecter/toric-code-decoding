@@ -1,0 +1,78 @@
+#ifndef LATTICE_H						#ifndef LATTICE_H
+#define LATTICE_H						#define LATTICE_H
+
+#define MAX_NEWRAND 65535					#define MAX_NEWRAND 65535
+
+#include <stdlib.h>						#include <stdlib.h>
+#include <string>						#include <string>
+#include <stdio.h>						#include <stdio.h>
+#include <iostream>						#include <iostream>
+#include <sstream>						#include <sstream>
+#include <assert.h>						#include <assert.h>
+#include <vector>						#include <vector>
+#include <algorithm>						#include <algorithm>
+#include <inttypes.h>						#include <inttypes.h>
+#include "operator.h"						#include "operator.h"
+#include "blossom5-v2.02.src/PerfectMatching.h"			#include "blossom5-v2.02.src/PerfectMatching.h"
+#include "blossom5-v2.02.src/GEOM/GeomPerfectMatching.h"	#include "blossom5-v2.02.src/GEOM/GeomPerfectMatching.h"
+
+
+using namespace std;						using namespace std;
+
+
+class Cell							class Cell
+{								{
+public:								public:
+    Operator *ErrInit;						    Operator *ErrInit;
+    Operator *ErrCurrent;					    Operator *ErrCurrent;
+    Operator *ErrGuess;						    Operator *ErrGuess;
+
+    Cell (double & p);					      |	    //Cell (double & p);
+							      >	    Cell ();
+    ~Cell (void);						    ~Cell (void);
+};								};
+
+
+class Vertex							class Vertex
+{								{
+public:								public:
+    int x;							    int x;
+    int y;							    int y;
+							      >	    int t;
+
+    Vertex (int newX, int newY);			      |	    Vertex (int newX, int newY, int newT);
+    ~Vertex (void) { }						    ~Vertex (void) { }
+};								};
+
+
+class Lattice							class Lattice
+{								{
+public:								public:
+    int xSize;							    int xSize;
+    int ySize;							    int ySize;
+							      >	    int T;
+    Cell ***cells;						    Cell ***cells;
+
+
+    Lattice (int newXSize, double p);			      |	    Lattice (int newXSize, int newT);
+    ~Lattice (void);						    ~Lattice (void);
+    bool syndromeXXXX (int xLoc, int yLoc);		      |	    bool syndromeZZZZ (int xLoc, int yLoc, double q_err);
+    bool syndromeZZZZ (int xLoc, int yLoc);		      <
+    vector<bool> getSignature (void);				    vector<bool> getSignature (void);
+    void correct (int xLoc, int yLoc);				    void correct (int xLoc, int yLoc);
+    void correctMesh ();				      |	    void evolute_and_correct (double p_err, double q_err);
+							      >	    void evolute(double p_err);
+							      >	    void perfect_correction(void);
+    void correctLine ( int x1Loc, int y1Loc, int x2Loc, int y	    void correctLine ( int x1Loc, int y1Loc, int x2Loc, int y
+    Operator* getLogical (string whichOp);			    Operator* getLogical (string whichOp);
+    bool success (Operator *p);				      |	    bool success (void);
+    void printState (void);					    void printState (void);
+    // New random generator				      |	    void print2DState(void);
+    unsigned int randomGeneratorState;			      |	    void print2DInit(void);
+    unsigned int NewRand(void);				      <
+    void NewSrand(unsigned int seed);			      <
+
+};								};
+
+
+#endif								#endif

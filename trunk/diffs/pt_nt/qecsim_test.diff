@@ -1,0 +1,30 @@
+RUNNING SIMULATION:   XSize=2   iterations=1000000   pMin=0.1 |	RUNNING SIMULATION: XSize=8   iterations=100   pMin=0.025   p
+Success at error level p=10% is 82.0592%.		      |	ERROR [%]:						SUCCE
+Success at error level p=10.1% is 81.8072%.		      |	Level	Effective	per_Step	Syndrome	Succe
+Success at error level p=10.2% is 81.6641%.		      |	2.5	16.829		2.5		2.5		94
+Success at error level p=10.3% is 81.5414%.		      |	2.6	17.384		2.6		2.6		91
+Success at error level p=10.4% is 81.3092%.		      |	2.7	17.93		2.7		2.7		94
+Success at error level p=10.5% is 81.2726%.		      |	2.8	18.468		2.8		2.8		92
+Success at error level p=10.6% is 81.0922%.		      |	2.9	18.999		2.9		2.9		90
+Success at error level p=10.7% is 80.8822%.		      |	3	19.522		3		3		90
+Success at error level p=10.8% is 80.7785%.		      |	RUNNING SIMULATION: XSize=16   iterations=100   pMin=0.025   
+Success at error level p=10.9% is 80.5525%.		      |	ERROR [%]:						SUCCE
+Success at error level p=11% is 80.4512%.		      |	Level	Effective	per_Step	Syndrome	Succe
+RUNNING SIMULATION:   XSize=4   iterations=1000000   pMin=0.1 |	2.5	27.994		2.5		2.5		95
+Success at error level p=10% is 83.3406%.		      |	2.6	28.723		2.6		2.6		98
+Success at error level p=10.1% is 83.0584%.		      |	2.7	29.43		2.7		2.7		92
+Success at error level p=10.2% is 82.7842%.		      |	2.8	30.115		2.8		2.8		94
+Success at error level p=10.3% is 82.4387%.		      |	2.9	30.779		2.9		2.9		92
+Success at error level p=10.4% is 82.2033%.		      |	3	31.421		3		3		85
+Success at error level p=10.5% is 81.8964%.		      |	RUNNING SIMULATION: XSize=20   iterations=100   pMin=0.025   
+Success at error level p=10.6% is 81.6048%.		      |	ERROR [%]:						SUCCE
+Success at error level p=10.7% is 81.3756%.		      |	Level	Effective	per_Step	Syndrome	Succe
+Success at error level p=10.8% is 80.9987%.		      |	2.5	32.076		2.5		2.5		98
+Success at error level p=10.9% is 80.802%.		      |	2.6	32.816		2.6		2.6		97
+Success at error level p=11% is 80.4719%.		      |	2.7	33.526		2.7		2.7		92
+RUNNING SIMULATION:   XSize=8   iterations=1000000   pMin=0.1 |	2.8	34.209		2.8		2.8		95
+Success at error level p=10% is 84.5983%.		      |	2.9	34.865		2.9		2.9		91
+Success at error level p=10.1% is 84.1557%.		      |	3	35.495		3		3		90
+Success at error level p=10.2% is 83.7661%.		      |	RUNNING SIMULATION: XSize=32   iterations=100   pMin=0.025   
+Success at error level p=10.3% is 83.2051%.		      |	ERROR [%]:						SUCCE
+							      >	Level	Effective	per_Step	Syndrome	Succe
