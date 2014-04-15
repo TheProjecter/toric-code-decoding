@@ -1,0 +1,193 @@
+#include "simulation.h"						#include "simulation.h"
+#include "constants.h"						#include "constants.h"
+#include <omp.h>						#include <omp.h>
+
+// Constructor reads parameters from a config file.		// Constructor reads parameters from a config file.
+Simulation::Simulation (void)					Simulation::Simulation (void)
+{								{
+
+    string tmp;							    string tmp;
+    string item;						    string item;
+    int pos;							    int pos;
+    ifstream f_conf("in/parameters.txt");			    ifstream f_conf("in/parameters.txt");
+
+    getline(f_conf,tmp);					    getline(f_conf,tmp);
+    pos = tmp.find(" = ");					    pos = tmp.find(" = ");
+    tmp = tmp.substr (pos + 3);					    tmp = tmp.substr (pos + 3);
+    stringstream ss(tmp);					    stringstream ss(tmp);
+    while(ss >> item)						    while(ss >> item)
+    {								    {
+        XSize.push_back(atoi(item.c_str()));			        XSize.push_back(atoi(item.c_str()));
+    }								    }
+
+    getline(f_conf,tmp);					    getline(f_conf,tmp);
+    pos = tmp.find(" = ");					    pos = tmp.find(" = ");
+    tmp = tmp.substr (pos + 3);					    tmp = tmp.substr (pos + 3);
+    iterations = atoi(tmp.c_str());				    iterations = atoi(tmp.c_str());
+
+    getline(f_conf,tmp);					    getline(f_conf,tmp);
+    pos = tmp.find(" = ");					    pos = tmp.find(" = ");
+    tmp = tmp.substr (pos + 3);					    tmp = tmp.substr (pos + 3);
+    pMin = atof(tmp.c_str());					    pMin = atof(tmp.c_str());
+
+    getline(f_conf,tmp);					    getline(f_conf,tmp);
+    pos = tmp.find(" = ");					    pos = tmp.find(" = ");
+    tmp = tmp.substr (pos + 3);					    tmp = tmp.substr (pos + 3);
+    pMax = atof(tmp.c_str());					    pMax = atof(tmp.c_str());
+
+    getline(f_conf,tmp);					    getline(f_conf,tmp);
+    pos = tmp.find(" = ");					    pos = tmp.find(" = ");
+    tmp = tmp.substr (pos + 3);					    tmp = tmp.substr (pos + 3);
+    pStep = atof(tmp.c_str());					    pStep = atof(tmp.c_str());
+
+    f_conf.close();						    f_conf.close();
+}								}
+
+
+// Simulate a simple decoding algorithm. Run simulation and s	// Simulate a simple decoding algorithm. Run simulation and s
+void Simulation::run (void)					void Simulation::run (void)
+{								{
+
+    // Initialize the random number generator		      |	    // Initialize the random number generator.
+    srand (time(0));						    srand (time(0));
+    // Initialize constant random number seed		      <
+    //srand(8844);					      <
+
+
+    //loop for different XSizes				      <
+    for (int i = 0; i < (int) XSize.size(); i++)		    for (int i = 0; i < (int) XSize.size(); i++)
+    {								    {
+
+        //data file					      <
+        ofstream f_out;						        ofstream f_out;
+        stringstream ss;					        stringstream ss;
+							      <
+        //add a 0 to the name if XSize is smaller than 0	        //add a 0 to the name if XSize is smaller than 0
+        if(XSize[i] < 10)					        if(XSize[i] < 10)
+        {							        {
+            ss << "out/results_0" << XSize[i] << ".txt";	            ss << "out/results_0" << XSize[i] << ".txt";
+        }							        }
+        else							        else
+        {							        {
+            ss << "out/results_" << XSize[i] << ".txt";		            ss << "out/results_" << XSize[i] << ".txt";
+
+        }							        }
+							      <
+        //open data file stream				      <
+        f_out.open (ss.str().c_str());				        f_out.open (ss.str().c_str());
+
+							      <
+        //Print some infromation to screen		      <
+        cout   << "RUNNING SIMULATION:   XSize=" << XSize[i] 	        cout   << "RUNNING SIMULATION:   XSize=" << XSize[i] 
+
+							      <
+        //loop for different p's			      <
+        for (double p = pMin; p <= pMax + 0.00001; p += pStep	        for (double p = pMin; p <= pMax + 0.00001; p += pStep
+        {							        {
+            //initialize the counter summing up the successes <
+            int cntSucc = 0;					            int cntSucc = 0;
+            //start parallel programming		      <
+#pragma omp parallel for schedule(dynamic) default(shared) re	#pragma omp parallel for schedule(dynamic) default(shared) re
+            for (int j = 1; j <= iterations; j++ )		            for (int j = 1; j <= iterations; j++ )
+            {							            {
+
+                //There is a lot of debugging in this loop    <
+                //important tasks are marked with ######      <
+
+
+							      <
+                if (debug4)				      <
+                {					      <
+                    cout<<"iteration: "<<j<<endl;	      <
+                }					      <
+							      <
+                if (debug1) cout << "1. ERROR WAS GENERATED:"	                if (debug1) cout << "1. ERROR WAS GENERATED:"
+							      |	                Lattice myLattice (XSize[i],p);
+                //###########				      <
+                //Build a lattice with errors		      <
+                Lattice myLattice (XSize[i], p);	      <
+                //###########				      <
+							      <
+                if (debug1) myLattice.printState();		                if (debug1) myLattice.printState();
+                if (debug3)				      <
+                {					      <
+                    cout<<"Before Correction:"<<endl;	      <
+                    myLattice.printStateQB();		      <
+                }					      <
+
+                if (debug1) cout << "2. Z ERRORS CORRECTED US	                if (debug1) cout << "2. Z ERRORS CORRECTED US
+
+                //############				      <
+                //Correct the lattice			      <
+                myLattice.correctMesh();		      <
+                //############				      <
+							      <
+
+							      >	                myLattice.correctMesh();
+                if (debug1) myLattice.printState();		                if (debug1) myLattice.printState();
+                if (debug3)				      <
+                {					      <
+                    cout<<"After Correction:"<<endl;	      <
+                    myLattice.printStateQB();		      <
+                }					      <
+
+
+                if (debug4)				      <
+                {					      <
+                    if ( !myLattice.is_corrected() )	      <
+                    {					      <
+                        cout<<"Not Corrected"<<endl;	      <
+                        assert(0);			      <
+                    }					      <
+                }					      <
+
+							      <
+							      <
+                //##############			      <
+                //Test, if the recovery was successful	      <
+                if (myLattice.success (0))			                if (myLattice.success (0))
+                {						                {
+                    cntSucc++;					                    cntSucc++;
+							      <
+                    //##############			      <
+                    if (debug1) cout << "SIMULATION REPORTS S	                    if (debug1) cout << "SIMULATION REPORTS S
+							      <
+                    if(debug9)				      <
+                    {					      <
+                        char in;			      <
+                        cout<< "Correction Succeded"<<endl;   <
+                        cin>>in;			      <
+                    }					      <
+                }						                }
+                else						                else
+                {						                {
+							      <
+                    if(debug7)				      <
+                    {					      <
+                        char in;			      <
+                        cout<< "Correction Failed"<<endl;     <
+                        cin>>in;			      <
+                    }					      <
+                    if (debug1) cout << "SIMULATION REPORTS F	                    if (debug1) cout << "SIMULATION REPORTS F
+                }						                }
+
+							      >
+            }							            }
+
+
+            //Print the results to the screen		      <
+            cout << "Success at error level p=" << 100 * p <<	            cout << "Success at error level p=" << 100 * p <<
+							      <
+            //Print the resultsto thefile		      <
+            f_out << 100 * p << " " <<  (double) (100 * cntSu	            f_out << 100 * p << " " <<  (double) (100 * cntSu
+
+							      <
+        }							        }
+
+        f_out.close();						        f_out.close();
+
+    }								    }
+}								}
+							      <
+							      <
+//end of file simulation.cc				      <

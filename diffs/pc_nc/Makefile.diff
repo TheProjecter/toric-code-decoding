@@ -1,0 +1,4 @@
+all:								all:
+	g++ -Wall  operator.cc lattice.cc simulation.cc qecsi |		g++ -Wall dijkstra.cc operator.cc lattice.cc simulati
+clean:								clean:
+	rm -f *.o qecsim *~						rm -f *.o qecsim *~

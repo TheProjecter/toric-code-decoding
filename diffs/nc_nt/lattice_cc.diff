@@ -1,0 +1,2304 @@
+#include "lattice.h"						#include "lattice.h"
+#include "constants.h"						#include "constants.h"
+
+
+// Constructor generates a unit cell. In case of the toric co |	// Constructor generates a unit cell. In case of the surface 
+							      >
+//Cell::Cell (double & p) {					//Cell::Cell (double & p) {
+Cell::Cell (void)					      |	Cell::Cell ()
+{								{
+    ErrInit    = new Operator (1);				    ErrInit    = new Operator (1);
+    //ErrInit->generateRandom (p);			      |	// ErrInit->generateRandom (p);
+    // ErrCurrent is a copy of the random ErrInit		    // ErrCurrent is a copy of the random ErrInit
+    //ErrCurrent = new Operator (*ErrInit);			    //ErrCurrent = new Operator (*ErrInit);
+    ErrCurrent = new Operator(1);			      |	    ErrCurrent = new Operator (1);
+    ErrGuess   = new Operator (1);				    ErrGuess   = new Operator (1);
+
+}								}
+
+
+// Destructor for a unit cell.					// Destructor for a unit cell.
+Cell::~Cell (void)						Cell::~Cell (void)
+{								{
+    delete ErrInit;						    delete ErrInit;
+    delete ErrCurrent;						    delete ErrCurrent;
+    delete ErrGuess;						    delete ErrGuess;
+}								}
+
+
+// Constructor of a vertex representing an operator in the tr	// Constructor of a vertex representing an operator in the tr
+Vertex::Vertex (int newX, int newY, int newT)			Vertex::Vertex (int newX, int newY, int newT)
+{								{
+    x  = newX;							    x  = newX;
+    y  = newY;							    y  = newY;
+    t  = newT;							    t  = newT;
+}								}
+
+
+// Constructor generates the lattice.				// Constructor generates the lattice.
+							      >	//Lattice::Lattice(int newXSize, double p) {
+Lattice::Lattice(int newXSize, int newT)			Lattice::Lattice(int newXSize, int newT)
+{								{
+
+							      >	    if (debug3)
+							      >	    {
+							      >	        cout<<"Create Lattice"<<endl;
+							      >	    }
+    xSize = 2*newXSize;						    xSize = 2*newXSize;
+    ySize = 2*newXSize;						    ySize = 2*newXSize;
+    T	= newT;							    T	= newT;
+
+
+// zSize: 0 is the syndrome level, 1,2,3,4 are the qubit indi <
+    zSize = 5;						      <
+
+							      |	    cells = new Cell**[xSize];
+    cells = new Cell***[xSize];				      <
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        cells[i] = new Cell**[ySize];			      |	        cells[i] = new Cell*[ySize];
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            cells[i][j] = new Cell *[zSize];		      |	//if i,j both odd     OR    both even DO NOT generate a new c
+            for ( int k = 0; k < zSize; k++)		      |	            if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+            {							            {
+                //if k= 0     OR  i,j both odd OR    both eve |	                continue;
+                if ( k == 0 || (i%2 && j%2)  || (!(i%2) && !( |	            }
+                {					      |	//otherwise, if only one of i,j is odd generate a new cell (q
+                    continue;				      |	            cells[i][j] = new Cell ();
+                }					      |	        }
+							      |	    }
+                //otherwise, if only one of i,j is odd  and k <
+                if(debug6)				      <
+                {					      <
+                    cout<< i<<j<<k<<" ";		      <
+                }					      <
+                cells[i][j][k] = new Cell ();		      <
+							      <
+            }//end of k					      <
+        }//end of j					      <
+    }// end of i					      <
+							      <
+
+							      >	    if (debug3)
+							      >	    {
+							      >	        cout<<"Lattice created"<<endl;
+							      >	    }
+}								}
+
+
+// Destructor of the lattice.					// Destructor of the lattice.
+Lattice::~Lattice(void)						Lattice::~Lattice(void)
+{								{
+
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            for (int k = 0; k < zSize; k++)		      |	            if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+            {						      |	                continue;
+                if ((k == 0 )  || (i%2 && j%2) || (!(i%2) &&  |	            delete cells[i][j];
+                    continue;				      <
+                delete cells[i][j][k];			      <
+            }						      <
+            delete[] cells[i][j];			      <
+        }							        }
+        delete[] cells[i];					        delete[] cells[i];
+    }								    }
+    delete cells;						    delete cells;
+
+}								}
+
+
+
+
+// Calculates Octaeder plaquette syndrome at (around) the spe |	// Calculates plaquette syndrome at (around) the specified co
+bool Lattice::OCTsyndromeZZZZZZZZ (int xLoc, int yLoc, double |	bool Lattice::syndromeZZZZ (int xLoc, int yLoc, double q_err)
+{								{
+//both i,j odd						      <
+							      <
+							      <
+//cout<<" xLoc "<< xLoc <<"  xSize "<< xSize <<" yLoc  " <<yL <
+							      <
+
+    assert (xLoc < xSize && yLoc < ySize && (xLoc % 2) && (yL	    assert (xLoc < xSize && yLoc < ySize && (xLoc % 2) && (yL
+
+    //q could be modeled here as well				    //q could be modeled here as well
+    double q = q_err;						    double q = q_err;
+
+							      <
+    bool result = false;				      <
+							      <
+    Operator *P = new Operator(8);			      <
+    P->ops[0]  = Z;					      <
+    P->ops[1]  = Z;					      <
+    P->ops[2]  = Z;					      <
+    P->ops[3]  = Z;					      <
+    P->ops[4]  = Z;					      <
+    P->ops[5]  = Z;					      <
+    P->ops[6]  = Z;					      <
+    P->ops[7]  = Z;					      <
+							      <
+    Operator *plaquette = new Operator(8);		      <
+							      <
+//Remember QB indices are				      <
+//1--2							      <
+//|  |							      <
+//3--4							      <
+							      <
+    /*/DEBUG						      <
+    //test where the plaquette tests the cells		      <
+    cout << "xLoc  " << xLoc << "    yLoc-1  " << yLoc-1 << e <
+    cout << "xLoc+1modxSiyze  " << (xLoc+1)%xSize << "    yLo <
+    cout << "xLoc  " << xLoc << "    yLoc+1modySize  " << (yL <
+    cout << "xLoc-1  " << xLoc-1 <<"  yLoc  " << yLoc <<  end <
+    */							      <
+							      <
+							      <
+							      <
+//One step left (if i is line, y is column) to the square, ge <
+    plaquette->ops[0]  = cells[xLoc][(yLoc-1+ySize)%ySize][2] <
+    plaquette->ops[1]  = cells[xLoc][(yLoc-1+ySize)%ySize][4] <
+    //One step down get QB 1,2				      <
+    plaquette->ops[2]  = cells[(xLoc+1)%xSize][yLoc][1]->ErrC <
+    plaquette->ops[3]  = cells[(xLoc+1)%xSize][yLoc][2]->ErrC <
+// One step right, get QB 1,3				      <
+    plaquette->ops[4]  = cells[xLoc][(yLoc+1)%ySize][1]->ErrC <
+    plaquette->ops[5]  = cells[xLoc][(yLoc+1)%ySize][3]->ErrC <
+//One step up get QB 3,4				      <
+    plaquette->ops[6]  = cells[(xLoc-1+xSize)%xSize][yLoc][3] <
+    plaquette->ops[7]  = cells[(xLoc-1+xSize)%xSize][yLoc][4] <
+							      <
+							      <
+							      <
+	//Does it commute?				      <
+    result = !P->commute(*plaquette);			      <
+							      <
+    //generate noisy syndrome measurement with propapility q  <
+    double r = (double)rand() / ((double)RAND_MAX + 1);	      <
+    //if it shall have noise, then flip it		      <
+    if (r < q)						      <
+    {							      <
+        result = !result;				      <
+    }							      <
+							      <
+							      <
+    delete P;						      <
+    delete plaquette;					      <
+    return result;					      <
+}							      <
+							      <
+// Calculates SQUARE plaquette syndrome at (around) the speci <
+bool Lattice::SQsyndromeZZZZ (int xLoc, int yLoc, double q_er <
+{							      <
+//exactly one of i,j odd and one even			      <
+    assert (xLoc < xSize && yLoc < ySize && ( ((xLoc % 2) &&  <
+							      <
+							      <
+    //q could be modeled here as well			      <
+    double q = q_err;					      <
+    bool result = false;					    bool result = false;
+
+    Operator *P = new Operator(4);				    Operator *P = new Operator(4);
+    P->ops[0]  = Z;						    P->ops[0]  = Z;
+    P->ops[1]  = Z;						    P->ops[1]  = Z;
+    P->ops[2]  = Z;						    P->ops[2]  = Z;
+    P->ops[3]  = Z;						    P->ops[3]  = Z;
+
+							      <
+    Operator *plaquette = new Operator(4);			    Operator *plaquette = new Operator(4);
+							      |	    plaquette->ops[0]  = cells[xLoc][yLoc-1]->ErrCurrent->ops
+//Remember QB indices are				      |	    plaquette->ops[1]  = cells[(xLoc+1)%xSize][yLoc]->ErrCurr
+//1--2							      |	    plaquette->ops[2]  = cells[xLoc][(yLoc+1)%ySize]->ErrCurr
+//|ij|							      |	    plaquette->ops[3]  = cells[xLoc-1][yLoc]->ErrCurrent->ops
+//3--4							      <
+    plaquette->ops[0]  = cells[xLoc][yLoc][1]->ErrCurrent->op <
+    plaquette->ops[1]  = cells[xLoc][yLoc][2]->ErrCurrent->op <
+    plaquette->ops[2]  = cells[xLoc][yLoc][3]->ErrCurrent->op <
+    plaquette->ops[3]  = cells[xLoc][yLoc][4]->ErrCurrent->op <
+							      <
+							      <
+
+    result = !P->commute(*plaquette);				    result = !P->commute(*plaquette);
+
+
+
+
+    //generate noisy syndrome measurement with propapility q	    //generate noisy syndrome measurement with propapility q
+    double r = (double)rand() / ((double)RAND_MAX + 1);		    double r = (double)rand() / ((double)RAND_MAX + 1);
+    //if it shall have noise, then flip it			    //if it shall have noise, then flip it
+    if (r < q)							    if (r < q)
+    {								    {
+        result = !result;					        result = !result;
+    }								    }
+
+
+    delete P;							    delete P;
+    delete plaquette;						    delete plaquette;
+    return result;						    return result;
+}								}
+
+
+// Calculates a signature which is a concatentation of all si	// Calculates a signature which is a concatentation of all si
+vector<bool> Lattice::getSignature (void)			vector<bool> Lattice::getSignature (void)
+{								{
+
+    // The signature starts out empty				    // The signature starts out empty
+    vector<bool> signature;					    vector<bool> signature;
+
+
+
+    // Add ZZZZ syndromes					    // Add ZZZZ syndromes
+    for (int i = 1; i < xSize; i+=2)				    for (int i = 1; i < xSize; i+=2)
+    {								    {
+        for (int j = 1; j < ySize; j+=2)			        for (int j = 1; j < ySize; j+=2)
+        {							        {
+            // signature.push_back(SQsyndromeZZZZ(i,j));      |	            //signature.push_back(syndromeZZZZ(i,j));
+        }							        }
+    }								    }
+
+    return signature;						    return signature;
+}								}
+
+
+//  Transform X or Z errors at the specified location.		//  Transform X or Z errors at the specified location.
+void Lattice::correct ( int xLoc, int yLoc, int QubitNr)      |	void Lattice::correct ( int xLoc, int yLoc)
+{								{
+    if (debug4)						      <
+    {							      <
+        cout<< "xsize,ysixze,ysize "<<xSize<<ySize<<zSize<<en <
+        cout<< "xLoc,yLoc,QBNr "<<xLoc<<yLoc<<QubitNr<<endl;  <
+    }							      <
+    assert (xLoc < xSize && yLoc < ySize && QubitNr < zSize); <
+
+							      >	    assert (xLoc < xSize && yLoc < ySize);
+//X*X=I								//X*X=I
+    pauli p = X;						    pauli p = X;
+
+    // Correct the error					    // Correct the error
+    cells[xLoc][yLoc][QubitNr]->ErrCurrent->ops[0] = cells[xL |	    cells[xLoc][yLoc]->ErrCurrent->ops[0] = cells[xLoc][yLoc]
+    cells[xLoc][yLoc][QubitNr]->ErrGuess->ops[0] = cells[xLoc |	    cells[xLoc][yLoc]->ErrGuess->ops[0] = cells[xLoc][yLoc]->
+							      <
+    if (debug1)						      <
+    {							      <
+        cout << " -> correcting " << p << " at x=" << xLoc << <
+    }							      <
+    if (debug3)						      <
+    {							      <
+        cout << " -> correcting " << p << " at x=" << xLoc << <
+    }							      <
+							      <
+}//end of correct()					      <
+
+							      >	    if (debug1) cout << " -> correcting " << p << " at x=" <<
+							      >	}
+
+
+//evolutes the lattice in time				      |	//evtl void Lattice::evolute(double & p_err){
+void Lattice::evolute(double p_err)				void Lattice::evolute(double p_err)
+{								{
+							      >	    if (debug3)
+							      >	    {
+							      >	        cout<<"Evolute "<<endl;
+							      >	    }
+    //qubit error						    //qubit error
+    double p = p_err;						    double p = p_err;
+
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            for (int k = 0; k < zSize; k++)		      <
+            {						      <
+							      <
+							      <
+				//produces 2D cross section t <
+				//very nice debugging feature <
+                if (DEBUG2D)				      <
+                {					      <
+							      <
+                    //only second line nr 1 gets errors	      <
+                    if (i==1 && !(j%2))  //j=1,3,5is syndrome <
+                    {					      <
+                        cells[i][j][1]->ErrInit->generate_ran <
+                        //and copy into Current		      <
+                        cells[i][j][1]->ErrCurrent->ops[0] =  <
+                        cells[i][j][2]->ErrInit->generate_ran <
+                        //and copy into Current		      <
+                        cells[i][j][2]->ErrCurrent->ops[0] =  <
+                    }					      <
+							      <
+							      <
+
+							      >	            if (debug4)
+							      >	            {
+
+                }					      |	                //only second line nr 1 gets errors
+                else					      |	                if (i==1 && !(j%2))  //j=1,3,5is syndrome,0,2
+                {						                {
+                    //if k= 0     OR  i,j both odd OR    both |	                    cells[i][j]->ErrInit->generate_random_evo
+                    if ( k == 0 || (i%2 && j%2)  || (!(i%2) & <
+                    {					      <
+                        continue;			      <
+                    }					      <
+                    //otherwise, throw error at qubit	      <
+                    cells[i][j][k]->ErrInit->generate_random_ <
+                    //and copy into Current			                    //and copy into Current
+                    cells[i][j][k]->ErrCurrent->ops[0] = cell |	                    cells[i][j]->ErrCurrent->ops[0] = cells[i
+							      >	                }
+
+							      >	            }
+							      >	            else
+							      >	            {
+
+							      >	                //if i,j both odd     OR    both even do noth
+							      >	                if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+							      >	                {
+							      >	                    continue;
+                }						                }
+							      >	                //otherwise, throw error at qubit
+							      >	                cells[i][j]->ErrInit->generate_random_evoluti
+							      >	                //and copy into Current
+							      >	                cells[i][j]->ErrCurrent->ops[0] = cells[i][j]
+
+                //if that doesnt work, we need a copy method 	                //if that doesnt work, we need a copy method 
+            }//endk					      <
+        }//endj						      <
+    }//endi						      <
+							      <
+							      <
+							      <
+							      <
+							      <
+							      <
+
+							      >	            }
+
+
+}//end of evolute					      <
+
+							      >	        }
+							      >	    }
+
+
+
+							      >	}
+
+
+
+
+
+
+// Calls the mathcing algorithm to find pairs of squares with	// Calls the mathcing algorithm to find pairs of squares with
+// and calls the correction subroutine.				// and calls the correction subroutine.
+void Lattice::evolute_and_correct (double p_err, double q_err |	void Lattice::evolute_and_correct(double p_err, double q_err)
+{								{
+
+							      >	    if (debug3)
+							      >	    {
+							      >	        cout<<"Evolute and Correct "<<endl;
+							      >	    }
+							      >
+    //proper algorithm for q					    //proper algorithm for q
+    double p = p_err;						    double p = p_err;
+    double q_SQR = q_err_SQR;				      |	    double q = q_err;
+    double q_OCT = q_err_OCT;				      <
+
+
+    /*								    /*
+     General Structure:					      <
+     							      <
+    find proper algorithm for q, (is maybe done in simulation	    find proper algorithm for q, (is maybe done in simulation
+
+    create history						    create history
+
+    loop:							    loop:
+    evolute,measure,save					    evolute,measure,save
+
+    create vertices						    create vertices
+
+    match vertices						    match vertices
+
+    correct							    correct
+
+
+    */								    */
+
+    //Create 3d	history AND 3d ID Tracker		      |	    //Create 3d
+    bool*** history;						    bool*** history;
+    history = new bool** [xSize];			      <
+
+    int*** IDTracker;					      <
+    IDTracker = new int** [xSize];			      <
+
+    int ID = 0;						      |	    history = new bool** [xSize];
+    //fill history with false;				      <
+    //fill IDTracker with IDs				      <
+    if(debug10)						      <
+    {							      <
+        cout<<"Create history and ID Tracker:"<<endl;	      <
+    }							      <
+
+							      >	    //fill history with false;
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        history[i] = new bool *[ySize];				        history[i] = new bool *[ySize];
+        IDTracker[i] = new int *[ySize];		      <
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            history[i][j] = new bool [T+1];			            history[i][j] = new bool [T+1];
+            IDTracker[i][j] = new int [T+1];		      <
+            for (int t = 0; t < T+1; t++)			            for (int t = 0; t < T+1; t++)
+            {							            {
+                if(debug10)				      <
+                {					      <
+                    cout<<i<<j<<t<<" ID: "<<ID<<endl;	      <
+                }					      <
+                history[i][j][t] = false;			                history[i][j][t] = false;
+                IDTracker[i][j][t] = ID;		      <
+                ID++;					      <
+							      <
+            }							            }
+        }							        }
+    }								    }
+
+
+    //now evolute the lattice, measure after each time step a	    //now evolute the lattice, measure after each time step a
+
+    if (DEBUG2D)					      |
+							      >	    if (debug4)
+    {								    {
+        cout<<"Evolution"<<endl;				        cout<<"Evolution"<<endl;
+    }								    }
+
+							      <
+    //last T slice must be error free!			      <
+    for (int t = 0; t < T; t++)					    for (int t = 0; t < T; t++)
+    {								    {
+							      <
+        //evolute						        //evolute
+        this->evolute(p);				      <
+
+							      >	        this->evolute(p);
+
+        if (DEBUG2D)					      |	        if (debug4)
+        {							        {
+            cout<<"T="<<t<<": ";				            cout<<"T="<<t<<": ";
+            print2DState();					            print2DState();
+        }							        }
+
+							      >
+        //measure and save					        //measure and save
+
+        for (int i = 0; i < xSize; i++)				        for (int i = 0; i < xSize; i++)
+        {							        {
+            for (int j = 0; j < ySize; j++)			            for (int j = 0; j < ySize; j++)
+            {							            {
+
+                // if i,j both odd =square do sqr Zsyndrome,  |
+                // OR					      |	                // if i,j both odd and mesh id 1 do Zsyndrome
+                // if on Zoctagon (NOT Xoctagon) do oct Zsynd |	                if (i%2 && j%2 && syndromeZZZZ(i,j,q))
+                if ( (which_cell_type (i,j) == sqr && SQsyndr <
+                {						                {
+							      >
+                    //save in history				                    //save in history
+                    history[i][j][t] = true;			                    history[i][j][t] = true;
+                    if (debug3)					                    if (debug3)
+                    {						                    {
+                        cout<<"history i,j,t = "<<i<<" "<<j<<	                        cout<<"history i,j,t = "<<i<<" "<<j<<
+                    }						                    }
+                }						                }
+
+
+            }//end of j						            }//end of j
+        }//end of i						        }//end of i
+							      <
+    }//end of for t evolute and measure				    }//end of for t evolute and measure
+
+							      |	    if (debug3 || debug4)
+//Maybe here, debug print history			      |	    {
+							      >	        cout<<"Finished Measurement and Saving History"<<endl
+							      >	    }
+
+    //Print history						    //Print history
+    if (DEBUG2D)					      |	    if (debug4)
+    {								    {
+        cout<<"History"<<endl;				      <
+        for (int t = 0; t < T+1; t++)				        for (int t = 0; t < T+1; t++)
+        {							        {
+
+            cout<<"T="<<t<<": ";				            cout<<"T="<<t<<": ";
+            for (int i = 0; i < xSize; i++)			            for (int i = 0; i < xSize; i++)
+            {							            {
+                for (int j = 0; j < ySize; j++)			                for (int j = 0; j < ySize; j++)
+                {						                {
+
+
+                    if (i==1)  //j=1,3,5is syndrome,0,2,4 is  |	                    if (i==1 && !(j%2))  //j=1,3,5is syndrome
+                    {						                    {
+                        cout<< " "<<history[i][j][t]<<" ";    |	                        cout<< " ";
+							      |	                    }
+							      |	                    else if (i==1 && j%2)
+							      >	                    {
+							      >	                        cout<<history[i][j][t];
+                    }						                    }
+
+                }						                }
+                if (i==1)					                if (i==1)
+                {						                {
+                    cout<<endl;					                    cout<<endl;
+                }						                }
+            }//end of i						            }//end of i
+
+        }//endof t						        }//endof t
+							      >	        cout<<endl;
+    }								    }
+
+
+
+							      |	    // Identify vertices that represent squares with change i
+							      |	    vector<Vertex*> vertices;
+							      |	    if (debug4)
+    if (DEBUG2D)					      <
+    {								    {
+        cout<<"Vertices"<<endl;					        cout<<"Vertices"<<endl;
+    }								    }
+
+    // Identify vertices that represent squares with change i |	    for (int t = 0; t < T+1; t++)
+    vector<Vertex*> vertices;				      <
+    for (int t = 0; t < (T+1); t++)			      <
+    {								    {
+        if (DEBUG2D)					      |	        if (debug4)
+        {							        {
+            cout<<"T="<<t<<": ";				            cout<<"T="<<t<<": ";
+        }							        }
+							      <
+        for (int i = 0; i < xSize; i++)				        for (int i = 0; i < xSize; i++)
+        {							        {
+            for (int j = 0; j < ySize; j++)			            for (int j = 0; j < ySize; j++)
+            {							            {
+
+                bool is_vertex = false;				                bool is_vertex = false;
+                //is on Syndrome ij?			      |	                // if i,j both odd check if vertex
+                // if i,j both odd(Zocto) OR exactly one odd  |	                if (i%2 && j%2 )
+                if ( (i%2 && j%2 ) ||  which_cell_type (i,j)  <
+                {						                {
+                    /*						                    /*
+                    in the first slice, every syndrome is a v |	                    in the first and last slice, every syndro
+                    otherwise, check the current t and the on	                    otherwise, check the current t and the on
+                    if the syndrome changed, if->then it is c |	                    if the syndrome changed, it is considered
+                    */						                    */
+                    if((t==0 && history[i][j][t]) || (t!=0 &&	                    if((t==0 && history[i][j][t]) || (t!=0 &&
+                    {						                    {
+                        is_vertex = true;			                        is_vertex = true;
+                    }//end if is vertex				                    }//end if is vertex
+							      |	                }//end of if Plaquette (i,j)
+                }//end of if Syndrome ij		      <
+
+                //Print vertex history				                //Print vertex history
+                if (DEBUG2D)				      |	                if (debug4)
+                {						                {
+                    if (i==1)				      |
+							      >
+							      >	                    if (i==1 && !(j%2))  //j=1,3,5is syndrome
+							      >	                    {
+							      >	                        cout<< " ";
+							      >	                    }
+							      >	                    else if (i==1 && j%2)
+                    {						                    {
+                        if(is_vertex)				                        if(is_vertex)
+                        {					                        {
+                            cout<<" "<<vertices.size();	      |	                            cout<<vertices.size();
+                            //if(vertices.size()<10){cout<<"  <
+                            cout<<" ";			      <
+                        }					                        }
+                        else					                        else
+                        {					                        {
+                            cout<<" . ";		      |	                            cout<<".";
+                        }					                        }
+
+                    }						                    }
+							      >
+							      >
+                }						                }
+
+
+
+							      >
+							      >
+							      >
+                //if it is a vertex, save it			                //if it is a vertex, save it
+                if (is_vertex)					                if (is_vertex)
+                {						                {
+                    if (debug1) cout << "Is_Vertex at: "  <<  |	                    if (debug3) cout << "Is_Vertex at: "  << 
+                    Vertex* v = new Vertex (i, j, t);		                    Vertex* v = new Vertex (i, j, t);
+                    vertices.push_back(v);			                    vertices.push_back(v);
+                }//end if is vertex			      <
+
+							      >	                }
+
+            } //end of loop j				      |	            }//end of j
+        }//end of loop i				      <
+
+        if (DEBUG2D)					      |	        }//end of i
+							      >	        if (debug4)
+        {							        {
+            cout<<endl;						            cout<<endl;
+        }							        }
+							      >	    }//end of t
+							      >
+
+    }//end of loop t					      |
+							      >	    if (debug3)
+							      >	    {
+							      >	        cout<<"Finished Creating Vertices "<<endl;
+							      >	    }
+
+
+
+//now prepare for the minimum weight matching		      <
+
+    int numVert = vertices.size();				    int numVert = vertices.size();
+    int edges = 0;						    int edges = 0;
+
+    float** edgeLengths;				      |	    double** edgeLengths;
+    edgeLengths = new float*[numVert];			      |	    edgeLengths = new double*[numVert];
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        edgeLengths[i] = new float[numVert];		      |	        edgeLengths[i] = new double[numVert];
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            edgeLengths[i][j] = -1.0;				            edgeLengths[i][j] = -1.0;
+        }							        }
+    }								    }
+
+
+
+    // Add all weighted edges (u,v) with weight w in complete	    // Add all weighted edges (u,v) with weight w in complete
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        //for every start vertex i get the ID		      <
+        int startID = IDTracker[vertices[i]->x][vertices[i]-> <
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            if (i == j)						            if (i == j)
+            {							            {
+                continue;					                continue;
+            }							            }
+
+            //for every end vertex j get the ID		      <
+            int endID = IDTracker[vertices[j]->x][vertices[j] <
+            //And get the minimum distance		      <
+            float dist = 0.000f;			      <
+            if(startID>endID)				      <
+            {						      <
+                dist = Dist[startID][endID];		      <
+            }						      <
+            else					      <
+            {						      <
+                dist = Dist[endID][startID];		      <
+
+            }						      <
+
+
+            //then save it				      |
+            edgeLengths[i][j] = dist;			      |	//this is the distance in x y t
+            edges++;					      |	            double deltaX = min (abs (vertices[i]->x - vertic
+							      >	            double deltaY = min (abs (vertices[i]->y - vertic
+							      >	            double deltaT = abs (vertices[i]->t - vertices[j]
+							      >
+							      >
+							      >	            /*
+							      >	            //here, some fancy algorithm for the distance is 
+							      >	            if(distance_tobi){
+							      >	            // Tobias' algorithm
+							      >
+							      >
+							      >	            	//First, make shure those guys are connected 
+							      >	            	bool is_infinite = false;
+							      >	            	//if prob is 0 but there is a distance they s
+							      >	            	if ((p==0 && (deltaY>0 || deltaX>0)) ||  (q==
+							      >	            		is_infinite = true;
+							      >	            	}
+							      >
+							      >	            	//so if the distance is infinite, dont add th
+							      >	            	if(is_infinite){continue;}
+							      >
+							      >
+							      >	            	//otherwise, weight the edge and add it:
+							      >
+							      >
+							      >
+							      >	            	//max delta is the most unprobable distance o
+							      >	            	//XSize/2 is the real lattice, /2 again, beca
+							      >	            	double min_p_factor = pow(p,(xSize/4));
+							      >	            	double max_delta = 1/min_p_factor;
+							      >
+							      >
+
+
+							      >	            	if(p>0) {
+							      >	            		double X_p_factor = p;//pow(p,deltaX)
+							      >	            		double Y_p_factor = p;//pow(p,deltaY)
+
+        }//end of j					      |	            		//deltaX *=(1/X_p_factor);
+    }//end of i						      |	            		//deltaY *=(1/Y_p_factor);
+							      >	            		deltaX *=(1-X_p_factor);
+							      >	            		deltaY *=(1-Y_p_factor);
+							      >	            	}
+
+							      >	            	if(q>0) {
+							      >	            		double T_q_factor = q;//pow(q,deltaT)
+							      >	            		//deltaT *=(1/T_q_factor);
+							      >	            		deltaT *=(1-T_q_factor);
+							      >	            	}
+							      >
+							      >	            //ENd of Tobias' algorithm
+							      >	            */
+							      >
+							      >
+							      >	//SUCHARAS' algorithm #######################################
+							      >
+							      >	// Calculate relative edge weights of time and space edges
+							      >	            double ws = 1000;
+							      >	            double wt = 1000;
+							      >	            //double wf = 1000;
+							      >
+							      >	            if (p!=0) ws = log ((1 - p) / p);
+							      >	            if (q!=0) wt = log ((1 - q) / q);
+							      >	            //if (p!=0) wf = log ((1 - p) / p);
+							      >
+							      >	            /* if (virtualRound && (vertices[i]->t == virtual
+							      >	             	    deltaX *= wf;
+							      >	               deltaY *= wf;
+							      >	             } else if (virtualRound) {
+							      >	               deltaX *= ws;
+							      >	               deltaY *= ws;
+							      >	             }*/
+							      >
+							      >	            deltaX *= ws;
+							      >	            deltaY *= ws;
+							      >	            deltaT *= wt;
+							      >
+							      >
+							      >	//END SUCHARAS' algorithm ###################################
+							      >
+							      >
+							      >	            //half the distance because of the lattice shape 
+							      >	            double dist   = ((deltaX + deltaY)/2)  + (double)
+							      >	            edgeLengths[i][j] = dist;
+							      >	            edges++;
+							      >	            if (debug1) cout << "Matching: i=" << i << " j= "
+							      >	        }
+							      >	    }
+
+
+
+// Call minimum weight perfect matching				// Call minimum weight perfect matching
+    struct PerfectMatching::Options options;			    struct PerfectMatching::Options options;
+    struct GeomPerfectMatching::GPMOptions gpm_options;		    struct GeomPerfectMatching::GPMOptions gpm_options;
+    options.verbose = false;					    options.verbose = false;
+    PerfectMatching *pm = new PerfectMatching(numVert,edges);	    PerfectMatching *pm = new PerfectMatching(numVert,edges);
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            double dist = edgeLengths[i][j];			            double dist = edgeLengths[i][j];
+            if (dist >= 0)					            if (dist >= 0)
+                pm->AddEdge(i,j,dist);				                pm->AddEdge(i,j,dist);
+        }							        }
+    }								    }
+
+
+
+    pm->options = options;					    pm->options = options;
+    pm->Solve();						    pm->Solve();
+
+							      |	    if (debug4)
+							      <
+    if (debug4 || DEBUG2D)				      <
+    {								    {
+        for (int i = 0; i < numVert; i++ )			        for (int i = 0; i < numVert; i++ )
+        {							        {
+            int j = pm->GetMatch(i);				            int j = pm->GetMatch(i);
+            if (i<j)						            if (i<j)
+            {							            {
+                cout<<"Matched: "<<i<<" and "<<j<<endl;		                cout<<"Matched: "<<i<<" and "<<j<<endl;
+            }							            }
+        }							        }
+    }								    }
+
+    // Call the correction subroutine for all matched vertice	    // Call the correction subroutine for all matched vertice
+    for (int i = 0; i < numVert; i++ )				    for (int i = 0; i < numVert; i++ )
+    {								    {
+        // i and j are matched					        // i and j are matched
+        int j = pm->GetMatch(i);				        int j = pm->GetMatch(i);
+        //only correct:						        //only correct:
+        //-once							        //-once
+        // -those vertices whose connections has space compon |	        // -those vertices whose connections have more dimens
+        //-the last history slice is special:			        //-the last history slice is special:
+        //a path is in space and time, then it is corrected B |	        // if there is a vertex, it is either in time and doe
+        // the last slice is without			      |	        //correction OR it is in space, because the last slic
+        //error by default SO: only correct which matching pa	        //error by default SO: only correct which matching pa
+
+
+        if ( !(vertices[i]->t == T && vertices[j]->t == T) &&	        if ( !(vertices[i]->t == T && vertices[j]->t == T) &&
+        {							        {
+            if (debug4 ||DEBUG2D)			      |	            if (debug4)
+            {							            {
+                cout<<"Corrected: "<<i<<" to "<<j<<endl;	                cout<<"Corrected: "<<i<<" to "<<j<<endl;
+            }							            }
+            correctLine (vertices[i]->x, vertices[i]->y, vert	            correctLine (vertices[i]->x, vertices[i]->y, vert
+
+
+        }//end of if correct				      |	        }
+    }//end of numVertices				      |	    }
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        delete vertices[i];					        delete vertices[i];
+    }								    }
+
+    delete pm;							    delete pm;
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        delete edgeLengths[i];					        delete edgeLengths[i];
+    }								    }
+    delete edgeLengths;						    delete edgeLengths;
+
+
+// Delete syndrome history AND IDTracker		      |	// Delete syndrome history
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            delete history[i][j];				            delete history[i][j];
+            delete IDTracker[i][j];			      <
+        }							        }
+        delete history[i];					        delete history[i];
+        delete IDTracker[i];				      <
+    }								    }
+    delete history;						    delete history;
+    delete IDTracker;					      <
+							      <
+
+}// end of evolute and correct				      |	    if (debug3)
+							      >	    {
+							      >	        cout<<"Finished Correction "<<endl;
+							      >	    }
+							      >	}
+
+
+
+
+
+// Does one round of perfect syndrome measurement and correct	// Does one round of perfect syndrome measurement and correct
+// Without it, it might not be part of the stabilizer		// Without it, it might not be part of the stabilizer
+//(errors could still be in it)					//(errors could still be in it)
+void Lattice::perfect_correction(void)				void Lattice::perfect_correction(void)
+{								{
+
+    if (debug3)							    if (debug3)
+    {								    {
+        cout<<"Evolute and Correct "<<endl;			        cout<<"Evolute and Correct "<<endl;
+    }								    }
+
+    double q_SQR = 0;					      |	    double q = 0;
+    double q_OCT = 0;					      <
+
+
+
+    //Create 1d							    //Create 1d
+    bool*** history;						    bool*** history;
+
+
+    history = new bool** [xSize];				    history = new bool** [xSize];
+
+    //fill history with false;					    //fill history with false;
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        history[i] = new bool *[ySize];				        history[i] = new bool *[ySize];
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            history[i][j] = new bool [T+1];			            history[i][j] = new bool [T+1];
+            for (int t = 0; t < 1; t++)				            for (int t = 0; t < 1; t++)
+            {							            {
+                history[i][j][t] = false;			                history[i][j][t] = false;
+            }							            }
+        }							        }
+    }								    }
+
+
+    //measure and save						    //measure and save
+    for (int t = 0; t < 1; t++)					    for (int t = 0; t < 1; t++)
+    {								    {
+        for (int i = 0; i < xSize; i++)				        for (int i = 0; i < xSize; i++)
+        {							        {
+            for (int j = 0; j < ySize; j++)			            for (int j = 0; j < ySize; j++)
+            {							            {
+
+                // if i,j both odd =square do sqr Zsyndrome,  |
+                // OR					      |	                // if i,j both odd and mesh id 1 do Zsyndrome
+                // if on Zoctagon (NOT Xoctagon) do oct Zsynd |	                if (i%2 && j%2 && syndromeZZZZ(i,j,q))
+                if ( (which_cell_type (i,j) == sqr && SQsyndr <
+                {						                {
+							      >
+                    //save in history				                    //save in history
+                    history[i][j][t] = true;			                    history[i][j][t] = true;
+                    if (debug3)				      <
+                    {					      <
+                        cout<<"history i,j,t = "<<i<<" "<<j<< <
+                    }					      <
+                }						                }
+
+							      <
+            }//end of j						            }//end of j
+        }//end of i						        }//end of i
+    }//end of t							    }//end of t
+
+
+
+
+    // Identify vertices that represent squares with change i	    // Identify vertices that represent squares with change i
+    vector<Vertex*> vertices;					    vector<Vertex*> vertices;
+    if (debug4)							    if (debug4)
+    {								    {
+        cout<<"Vertices"<<endl;					        cout<<"Vertices"<<endl;
+    }								    }
+
+    for (int t = 0; t < 1; t++)					    for (int t = 0; t < 1; t++)
+    {								    {
+        for (int i = 0; i < xSize; i++)				        for (int i = 0; i < xSize; i++)
+        {							        {
+            for (int j = 0; j < ySize; j++)			            for (int j = 0; j < ySize; j++)
+            {							            {
+
+                bool is_vertex = false;				                bool is_vertex = false;
+                // if i,j both odd check if vertex		                // if i,j both odd check if vertex
+                if (( (i%2 && j%2 ) || ( (!(i%2) && j%2)  ||  |	                if (i%2 && j%2 && history[i][j][t])
+                {						                {
+                    is_vertex = true;				                    is_vertex = true;
+
+                }//end of is vertex				                }//end of is vertex
+
+
+
+
+
+
+                //if it is a vertex, save it			                //if it is a vertex, save it
+                if (is_vertex)					                if (is_vertex)
+                {						                {
+                    if (debug3) cout << "Is_Vertex at: "  << 	                    if (debug3) cout << "Is_Vertex at: "  << 
+                    Vertex* v = new Vertex (i, j, t);		                    Vertex* v = new Vertex (i, j, t);
+                    vertices.push_back(v);			                    vertices.push_back(v);
+
+                }						                }
+
+            }//end of j						            }//end of j
+
+        }//end of i						        }//end of i
+    }//end of t							    }//end of t
+
+
+
+
+
+
+
+    int numVert = vertices.size();				    int numVert = vertices.size();
+    int edges = 0;						    int edges = 0;
+
+    double** edgeLengths;					    double** edgeLengths;
+    edgeLengths = new double*[numVert];				    edgeLengths = new double*[numVert];
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        edgeLengths[i] = new double[numVert];			        edgeLengths[i] = new double[numVert];
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            edgeLengths[i][j] = -1.0;				            edgeLengths[i][j] = -1.0;
+        }							        }
+    }								    }
+
+
+
+    // Add all weighted edges (u,v) with weight w in complete	    // Add all weighted edges (u,v) with weight w in complete
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            if (i == j)						            if (i == j)
+            {							            {
+                continue;					                continue;
+            }							            }
+
+
+
+			//this is the distance in x y t	      |	//this is the distance in x y t
+            double deltaX = min (abs (vertices[i]->x - vertic	            double deltaX = min (abs (vertices[i]->x - vertic
+            //if both syndromes are both on the same odd colu <
+            //just a fancy specialty of this metrik (taxi-cab <
+            if ( (vertices[i]->y == vertices[j]->y) && (!(ver <
+            {						      <
+                deltaX = deltaX + 2;			      <
+            }						      <
+							      <
+            double deltaY = min (abs (vertices[i]->y - vertic	            double deltaY = min (abs (vertices[i]->y - vertic
+            //if the syndromes are both on the same odd line  <
+            //just a fancy specialty of this metrik (taxi-cab <
+            if ( (vertices[i]->x == vertices[j]->x) && (!(ver <
+            {						      <
+                deltaY = deltaY + 2;			      <
+            }						      <
+							      <
+            double deltaT = abs (vertices[i]->t - vertices[j]	            double deltaT = abs (vertices[i]->t - vertices[j]
+
+            double dist   = deltaX + deltaY + deltaT;	      |	            //half the distance because of the lattice shape 
+							      >	            double dist   = ((deltaX + deltaY)/2)  + (double)
+            edgeLengths[i][j] = dist;				            edgeLengths[i][j] = dist;
+            edges++;						            edges++;
+            if (debug1) cout << "Matching: i=" << i << " j= "	            if (debug1) cout << "Matching: i=" << i << " j= "
+        }							        }
+    }								    }
+
+
+
+// Call minimum weight perfect matching				// Call minimum weight perfect matching
+    struct PerfectMatching::Options options;			    struct PerfectMatching::Options options;
+    struct GeomPerfectMatching::GPMOptions gpm_options;		    struct GeomPerfectMatching::GPMOptions gpm_options;
+    options.verbose = false;					    options.verbose = false;
+    PerfectMatching *pm = new PerfectMatching(numVert,edges);	    PerfectMatching *pm = new PerfectMatching(numVert,edges);
+
+//cout<<"numVert: "<<numVert<<endl;				//cout<<"numVert: "<<numVert<<endl;
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        for (int j = 0; j < numVert; j++)			        for (int j = 0; j < numVert; j++)
+        {							        {
+            double dist = edgeLengths[i][j];			            double dist = edgeLengths[i][j];
+            if (dist >= 0)					            if (dist >= 0)
+                pm->AddEdge(i,j,dist);				                pm->AddEdge(i,j,dist);
+        }							        }
+    }								    }
+
+
+
+    pm->options = options;					    pm->options = options;
+    pm->Solve();						    pm->Solve();
+
+    if (debug4)							    if (debug4)
+    {								    {
+        for (int i = 0; i < numVert; i++ )			        for (int i = 0; i < numVert; i++ )
+        {							        {
+            int j = pm->GetMatch(i);				            int j = pm->GetMatch(i);
+            if (i<j)						            if (i<j)
+            {							            {
+                cout<<"Matched: "<<i<<" and "<<j<<endl;		                cout<<"Matched: "<<i<<" and "<<j<<endl;
+            }							            }
+        }							        }
+    }								    }
+
+    // Call the correction subroutine for all matched vertice	    // Call the correction subroutine for all matched vertice
+    for (int i = 0; i < numVert; i++ )				    for (int i = 0; i < numVert; i++ )
+    {								    {
+        // i and j are matched					        // i and j are matched
+        int j = pm->GetMatch(i);				        int j = pm->GetMatch(i);
+
+        if (  (i < j) && (j < numVert) && ( (vertices[i]->x !	        if (  (i < j) && (j < numVert) && ( (vertices[i]->x !
+        {							        {
+            if (debug4)						            if (debug4)
+            {							            {
+                cout<<"Corrected: "<<i<<" to "<<j<<endl;	                cout<<"Corrected: "<<i<<" to "<<j<<endl;
+            }							            }
+            correctLine (vertices[i]->x, vertices[i]->y, vert	            correctLine (vertices[i]->x, vertices[i]->y, vert
+
+        }							        }
+    }								    }
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        delete vertices[i];					        delete vertices[i];
+    }								    }
+
+    delete pm;							    delete pm;
+
+    for (int i = 0; i < numVert; i++)				    for (int i = 0; i < numVert; i++)
+    {								    {
+        delete edgeLengths[i];					        delete edgeLengths[i];
+    }								    }
+    delete edgeLengths;						    delete edgeLengths;
+
+
+// Delete syndrome history					// Delete syndrome history
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            delete history[i][j];				            delete history[i][j];
+        }							        }
+        delete history[i];					        delete history[i];
+    }								    }
+    delete history;						    delete history;
+
+    if (debug3)							    if (debug3)
+    {								    {
+        cout<<"Finished Correction "<<endl;			        cout<<"Finished Correction "<<endl;
+    }								    }
+}								}
+
+
+
+
+
+
+
+
+// Given the locations of two syndromes with a non-trivial sy <
+// connecting the two syndromes.			      <
+void Lattice::correctLine ( int x1Loc, int y1Loc, int x2Loc,  <
+{							      <
+
+    // Initialize x1, y1, x2, y2 so that we can correct error <
+    // the SE or SW direction coming from coordinates 1 to co <
+
+//x y-->						      <
+//I							      <
+//v    EAST						      <
+//  00 01 02						      <
+//N 10 11 13 South					      <
+//  20 21 22						      <
+//  West						      <
+							      <
+    int x1, y1, x2, y2;					      <
+    if ( (y1Loc < y2Loc && y2Loc - y1Loc < ySize - y2Loc + y1 <
+            (y2Loc < y1Loc && y1Loc - y2Loc > ySize - y1Loc + <
+    {							      <
+        x1 = x1Loc;					      <
+        y1 = y1Loc;					      <
+        x2 = x2Loc;					      <
+        y2 = y2Loc;					      <
+    }							      <
+    else						      <
+    {							      <
+        x1 = x2Loc;					      <
+        y1 = y2Loc;					      <
+        x2 = x1Loc;					      <
+        y2 = y1Loc;					      <
+    }							      <
+							      <
+							      <
+//A LONG WALK TO FREEDOM ALGORITHM			      <
+							      <
+// go from x1|y1 -> x2|y2				      <
+// y2 = y1+(...)%ySize					      <
+							      <
+//DIRECTION						      <
+    // Determine if we need to go up, down or neither	      <
+    vertical_direction v_dir = v_where_to_go(x1, x2);	      <
+//up,down, neither, wrong_direction			      <
+							      <
+//HORIZONTAL Y-ACHSIS j					      <
+    // Determine if we need to start from sqr or oct	      <
+    celltype h_start_type = which_cell_type ( x1, y1);	      <
+//sqr,oct,wrong_type					      <
+    // Determine if we need to start from sqr or oct	      <
+    celltype h_end_type = which_cell_type ( x1, y2);	      <
+							      <
+//VERTICAL X-ACHSIS i					      <
+// Determine if we need to start from sqr or oct	      <
+    celltype v_start_type = h_end_type;			      <
+    // Determine if we need to start from sqr or oct	      <
+    celltype v_end_type = which_cell_type ( x2, y2);	      <
+							      <
+//Determine distance between syndromes			      <
+							      <
+    int delta_x = delta_xy(x2,x1,xSize);		      <
+    int delta_y = delta_xy(y2,y1,ySize);		      <
+							      <
+							      <
+							      <
+							      <
+							      <
+							      <
+							      <
+							      <
+    /*old debugging					      <
+      if (debug1) cout << "Correcting line x1=" << x1 << " y1 <
+    */							      <
+							      <
+    if (debug3)						      <
+    {							      <
+        cout <<endl<< "Correcting line x1=" << x1 << " y1=" < <
+             << " direction= ";				      <
+        if (v_dir==up)					      <
+        {						      <
+            cout<< " up "<<endl;			      <
+        }						      <
+        else if (v_dir==down)				      <
+        {						      <
+            cout<< " down "<<endl;			      <
+        }						      <
+        else if (v_dir==neither)			      <
+        {						      <
+            cout<< " neither "<<endl;			      <
+        }						      <
+        cout<< "Start Horizontal= ";			      <
+        if (h_start_type==sqr)				      <
+        {						      <
+            cout<< " square "<<endl;			      <
+        }						      <
+        else if (h_start_type==octo)			      <
+        {						      <
+            cout<< " 0ctogon "<<endl;			      <
+        }						      <
+        cout<< "End Horizontal= ";			      <
+        if (h_end_type==sqr)				      <
+        {						      <
+            cout<< " square "<<endl;			      <
+        }						      <
+        else if (h_end_type==octo)			      <
+        {						      <
+            cout<< " 0ctogon "<<endl;			      <
+        }						      <
+        cout<< "Start Vertical= ";			      <
+        if (v_start_type==sqr)				      <
+        {						      <
+            cout<< " square "<<endl;			      <
+        }						      <
+        else if (v_start_type==octo)			      <
+        {						      <
+            cout<< " 0ctogon "<<endl;			      <
+        }						      <
+        cout<< "End Vertical= ";			      <
+        if (v_end_type==sqr)				      <
+        {						      <
+            cout<< " square "<<endl;			      <
+        }						      <
+        else if (v_end_type==octo)			      <
+        {						      <
+            cout<< " 0ctogon "<<endl;			      <
+        }						      <
+        cout<< "Delta_y= "<<delta_xy(y2,y1,ySize)<<endl;      <
+        cout<< "Delta_x= "<<delta_xy(x2,x1,xSize)<<endl;      <
+    }							      <
+/////////////////////////////////////////////HORIZONTAL	      <
+    // correct in the horizontal direction first	      <
+//Qubits to correct in horizontal y Achsis		      <
+//y1 ++ to y2						      <
+							      <
+							      <
+// use correct( x1, y1, qubitcorr)			      <
+							      <
+    //do we need to correct in horizontal direction?	      <
+    if (delta_y != 0)					      <
+    {							      <
+							      <
+        if (debug4)					      <
+        {						      <
+            cout<<"delta_y != 0"<<endl;			      <
+        }						      <
+        //then start correction				      <
+							      <
+        //exitvariable					      <
+        bool exit = false;				      <
+        //exit next time variable			      <
+        bool exitnextloop = false;			      <
+							      <
+							      <
+        //laufvariable					      <
+        int Y = y1;					      <
+        //countingvariable counting the amount of corrections <
+        int l = 1;					      <
+							      <
+        //while exit is false				      <
+        while (!exit)					      <
+        {						      <
+							      <
+            if (debug4)					      <
+            {						      <
+                cout<<"Y, y2: "<<Y<<" "<<y2<<endl;	      <
+            }						      <
+							      <
+							      <
+            //only if on an octagon			      <
+            if ( which_cell_type(x1,Y) == octo)		      <
+            {						      <
+							      <
+                if (debug4)				      <
+                {					      <
+                    cout<<" is octagon "<<endl;		      <
+                }					      <
+							      <
+                //initialize the stuff!			      <
+                bool first = false;			      <
+                bool last = false;			      <
+                correctiontype whatcorrection = wrong_correct <
+                correctiontypeQB whatcorrectionqubit = wrong_ <
+							      <
+							      <
+                //check if first			      <
+                if ( l == 1)				      <
+                {					      <
+                    first = true;			      <
+                }					      <
+							      <
+                //check if last				      <
+                if ( delta_xy(Y,y2,ySize) <= 1 )	      <
+                {					      <
+                    last = true;			      <
+                }					      <
+							      <
+                //Determine correctiontype		      <
+                if ( last && h_end_type == octo )	      <
+                {					      <
+                    whatcorrection = before;		      <
+                }					      <
+                else if (first && h_start_type)		      <
+                {					      <
+                    whatcorrection = next;		      <
+                }					      <
+                else					      <
+                {					      <
+                    whatcorrection = four;		      <
+                }					      <
+							      <
+                //Determine correctiontypequbit		      <
+							      <
+                if ( (whatcorrection == before) && ( v_dir == <
+                {					      <
+                    whatcorrectionqubit = before_up;	      <
+                }					      <
+                else if ( (whatcorrection == before) && ( v_d <
+                {					      <
+                    whatcorrectionqubit = before_down;	      <
+                }					      <
+                else if ( (whatcorrection == next) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = next_up;	      <
+                }					      <
+                else if ( (whatcorrection == next) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = next_down;	      <
+                }					      <
+                else if ( (whatcorrection == four) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = four_up;	      <
+                }					      <
+                else if ( (whatcorrection == four) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = four_down;	      <
+                }					      <
+                else					      <
+                {					      <
+                    assert(0);				      <
+                }					      <
+							      <
+                if(debug4)				      <
+                {					      <
+                    if (first)				      <
+                    {					      <
+                        cout<< " first ";		      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        cout<<" not first ";		      <
+                    }					      <
+                    if (last)				      <
+                    {					      <
+                        cout<< " last ";		      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        cout<<" not last ";		      <
+                    }					      <
+							      <
+                    if (whatcorrectionqubit == before_up)     <
+                    {					      <
+                        cout<< " before_up ";		      <
+                    }					      <
+                    else if (whatcorrectionqubit == before_do <
+                    {					      <
+                        cout<< " before_down ";		      <
+                    }					      <
+                    else if(whatcorrectionqubit == next_up)   <
+                    {					      <
+                        cout<< " next_up ";		      <
+                    }					      <
+                    else if(whatcorrectionqubit == next_down) <
+                    {					      <
+                        cout<< " next_down ";		      <
+                    }					      <
+                    else if(whatcorrectionqubit == four_up)   <
+                    {					      <
+                        cout<< " four_up ";		      <
+                    }					      <
+                    else if(whatcorrectionqubit == four_down) <
+                    {					      <
+                        cout<< " four_down ";		      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        assert(0);			      <
+                    }					      <
+                }					      <
+							      <
+							      <
+							      <
+							      <
+                switch (whatcorrectionqubit)		      <
+                {					      <
+                case before_up:				      <
+                    correct(x1,(Y+ySize-1)%ySize, 2);	      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+							      <
+							      <
+                case before_down:			      <
+                    correct(x1,(Y+ySize-1)%ySize, 4);	      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+                case next_up:				      <
+                    correct(x1,(Y+1)%ySize, 1);		      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+                case next_down:				      <
+                    correct(x1,(Y+1)%ySize, 3);		      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+                case four_down:				      <
+                    correct(x1,(Y+ySize-1)%ySize, 4);	      <
+                    correct((x1+1)%xSize,Y, 1);		      <
+                    correct((x1+1)%xSize,Y, 2);		      <
+                    correct(x1,(Y+1)%ySize, 3);		      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+                case four_up:				      <
+                    correct(x1,(Y+ySize-1)%ySize, 2);	      <
+                    correct((x1+xSize-1)%ySize,Y, 3);	      <
+                    correct((x1+xSize-1)%ySize,Y, 4);	      <
+                    correct(x1,(Y+1)%ySize, 1);		      <
+                    Y = (Y+1)%ySize;			      <
+                    break;				      <
+                default:				      <
+                    assert(0);				      <
+                }					      <
+							      <
+                //if we were at an octagon it shure must have <
+                // (otherwise assert(0);)-->so counter up!    <
+                l++;					      <
+							      <
+            }						      <
+            else if ( which_cell_type(x1,Y) == sqr )	      <
+            {						      <
+							      <
+                Y = (Y+1)%ySize;			      <
+							      <
+            }						      <
+            else					      <
+            {						      <
+                assert(0);				      <
+            }// end if octo or square			      <
+							      <
+            // this makes the loop run a last time after Y hi <
+            // No, I do not want to talk about it!	      <
+            if (exitnextloop)				      <
+            {						      <
+                exit = true;				      <
+            }						      <
+            if (Y == y2)				      <
+            {						      <
+                exitnextloop = true;			      <
+            }						      <
+							      <
+							      <
+							      <
+							      <
+        } //endofwhileY					      <
+    }//endofifdeltay					      <
+							      <
+							      <
+/////////////////////////////////////////////VERTICAL	      <
+    // correct in the vertical direction		      <
+//Qubits to correct in vertical x Achsis		      <
+// go from x1|y2 to x2|y2				      <
+// x1 --> x2						      <
+							      <
+							      <
+// use correct( x1, y1, qubitcorr)			      <
+							      <
+    //do we even need to correct in vertical direction?	      <
+    if (delta_x != 0)					      <
+    {							      <
+        //then start correction				      <
+							      <
+        //exitvariable					      <
+        bool exit = false;				      <
+        //exit next time variable			      <
+        bool exitnextloop = false;			      <
+							      <
+        //laufvariable					      <
+        int X = x1;					      <
+        //countingvariable counting the amount of corrections <
+        int l = 1;					      <
+							      <
+        // while exit is false				      <
+        while (!exit)					      <
+        {						      <
+							      <
+            //only if on an octagon			      <
+            if ( which_cell_type(X,y2) == octo)		      <
+            {						      <
+							      <
+							      <
+                //initialize that stuff			      <
+                bool first = false;			      <
+                bool last = false;			      <
+                correctiontype whatcorrection = wrong_correct <
+                correctiontypeQB whatcorrectionqubit = wrong_ <
+							      <
+							      <
+							      <
+                //check if first			      <
+                if ( l == 1)				      <
+                {					      <
+                    first = true;			      <
+                }					      <
+                //check if last				      <
+                if ( delta_xy(X,x2,xSize) <= 1 )	      <
+                {					      <
+                    last = true;			      <
+                }					      <
+							      <
+                //Determine correctiontype		      <
+                if ( last && v_end_type == octo )	      <
+                {					      <
+                    whatcorrection = before;		      <
+                }					      <
+                else if (first && v_start_type)		      <
+                {					      <
+                    whatcorrection = next;		      <
+                }					      <
+                else					      <
+                {					      <
+                    whatcorrection = four;		      <
+                }					      <
+							      <
+                //Determine correctiontypequbit		      <
+							      <
+                if ( (whatcorrection == before) && ( v_dir == <
+                {					      <
+                    whatcorrectionqubit = before_up;	      <
+                }					      <
+                else if ( (whatcorrection == before) && ( v_d <
+                {					      <
+                    whatcorrectionqubit = before_down;	      <
+                }					      <
+                else if ( (whatcorrection == next) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = next_up;	      <
+                }					      <
+                else if ( (whatcorrection == next) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = next_down;	      <
+                }					      <
+                else if ( (whatcorrection == four) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = four_up;	      <
+                }					      <
+                else if ( (whatcorrection == four) && ( v_dir <
+                {					      <
+                    whatcorrectionqubit = four_down;	      <
+                }					      <
+                else					      <
+                {					      <
+                    assert(0);				      <
+                }					      <
+							      <
+							      <
+							      <
+							      <
+							      <
+                switch (whatcorrectionqubit)		      <
+                {					      <
+                case before_up:				      <
+                    correct((X+xSize+1)%xSize,y2, 1);	      <
+                    X = (X+xSize-1)%xSize;		      <
+                    break;				      <
+                case before_down:			      <
+                    correct((X+xSize-1)%xSize,y2, 3);	      <
+                    X = (X+1)%xSize;			      <
+                    break;				      <
+                case next_up:				      <
+                    correct((X+xSize-1)%xSize,y2, 3);	      <
+                    X = (X+xSize-1)%xSize;		      <
+                    break;				      <
+                case next_down:				      <
+                    correct((X+xSize+1)%xSize,y2, 1);	      <
+                    X = (X+1)%xSize;			      <
+                    break;				      <
+                case four_down:				      <
+                    correct((X+xSize-1)%xSize,y2, 3);	      <
+                    correct(X,(y2+ySize-1)%ySize, 2);	      <
+                    correct(X,(y2+ySize-1)%ySize, 4);	      <
+                    correct((X+xSize+1)%xSize,y2, 1);	      <
+                    X = (X+1)%xSize;			      <
+                    break;				      <
+                case four_up:				      <
+                    correct((X+xSize-1)%xSize,y2, 3);	      <
+                    correct(X,(y2+ySize-1)%ySize, 2);	      <
+                    correct(X,(y2+ySize-1)%ySize, 4);	      <
+                    correct((X+xSize+1)%xSize,y2, 1);	      <
+                    X = (X+xSize-1)%xSize;		      <
+                    break;				      <
+                default:				      <
+                    assert(0);				      <
+                }					      <
+							      <
+                //if we were at an octagon it shure must have <
+                // (otherwise assert(0);)-->so counter up!    <
+                l++;					      <
+							      <
+            }						      <
+            else if ( which_cell_type(X,y2) == sqr )	      <
+            {						      <
+							      <
+                switch (v_dir)				      <
+                {					      <
+                case up:				      <
+                    X = (X+xSize-1)%xSize;		      <
+                    break;				      <
+                case down:				      <
+                    X = (X+1)%xSize;			      <
+                    break;				      <
+                case neither:				      <
+                    assert(0);				      <
+                default:				      <
+                    assert(0);				      <
+                }					      <
+							      <
+							      <
+            }						      <
+            else					      <
+            {						      <
+                assert(0);				      <
+            }// end if octo or square			      <
+							      <
+							      <
+            // this makes the loop run a last time after X hi <
+            // No, I do not want to talk about it!	      <
+            if (exitnextloop)				      <
+            {						      <
+                exit = true;				      <
+            }						      <
+            if (X == x2)				      <
+            {						      <
+                exitnextloop = true;			      <
+            }						      <
+							      <
+							      <
+							      <
+							      <
+        } //endofwhileY					      <
+    }//endofifdeltax					      <
+							      <
+							      <
+}// end of function I guess...				      <
+							      <
+							      <
+							      <
+							      <
+// Determines if we need to go up, down or neither in the lat <
+vertical_direction Lattice::v_where_to_go (int x1, int x2)    <
+{							      <
+							      <
+    vertical_direction v_dir = wrong_direction;		      <
+							      <
+    if ( (x1 < x2 && x2 - x1 <  xSize - x2 + x1) ||	      <
+            (x2 < x1 && x1 - x2 >  xSize - x1 + x2) )	      <
+        v_dir = down;					      <
+    else if (x1 == x2)					      <
+        v_dir = neither;				      <
+    else						      <
+        v_dir = up;					      <
+							      <
+    return v_dir;					      <
+}							      <
+							      <
+							      <
+							      <
+							      <
+// Determines if the celltype is square or an octagon	      <
+celltype Lattice::which_cell_type ( int x, int y)	      <
+{							      <
+							      <
+    int i = x;						      <
+    int j = y;						      <
+							      <
+    celltype type = wrong_type;				      <
+							      <
+    if ( (i%2 && j%2)  || (!(i%2) && !(j%2)) )		      <
+    {							      <
+        type = octo;					      <
+    }							      <
+    else if ( (!(i%2) && j%2)  || (i%2 && !(j%2)) )	      <
+    {							      <
+        type = sqr;					      <
+    }							      <
+    else						      <
+    {							      <
+        type = wrong_type;				      <
+    }							      <
+							      <
+    return type;					      <
+							      <
+}//end of which_cell_type				      <
+							      <
+							      <
+							      <
+//determines distance between coordinates in x direction      <
+int Lattice::delta_xy(int xy1, int xy2, int Size)	      <
+{							      <
+							      <
+    int d = min (abs(xy2-xy1), Size-abs(xy2-xy1) );	      <
+							      <
+    return d;						      <
+							      <
+}//endof delta_x					      <
+							      <
+							      <
+							      <
+//returns true if there is no error syndrome anywhere on the  <
+							      <
+bool Lattice::is_line()					      <
+{							      <
+							      <
+							      <
+    bool is_line_var = false;				      <
+    int syndromecounter = 0;				      <
+							      <
+							      <
+    // Identify vertices that represent squares/octagons with <
+							      <
+							      <
+    for (int i = 0; i < xSize; i++)			      <
+    {							      <
+        for (int j = 0; j < ySize; j++)			      <
+        {						      <
+            bool syndrome = false;			      <
+// if i,j both odd do OCT-Z-syndrome (detects X Errors)	      <
+							      <
+            if ( ((i%2) && (j%2)) )			      <
+            {						      <
+                // syndrome = OCTsyndromeZZZZZZZZ(i,j);	      <
+            }						      <
+//if exactly  one of i and j is odd and one is even do SQ-Z-S <
+							      <
+            if (  (i%2 && !(j%2))   ||   (!(i%2) && j%2) )    <
+            {						      <
+                //syndrome = SQsyndromeZZZZ(i,j);	      <
+            }						      <
+							      <
+							      <
+// if one of the above has a syndrome			      <
+            if (syndrome)				      <
+            {						      <
+                syndromecounter++;			      <
+            }						      <
+//otherwise go further					      <
+        }						      <
+    }							      <
+							      <
+    if (syndromecounter == 2)				      <
+    {							      <
+        is_line_var = true;				      <
+    }							      <
+
+
+    return is_line_var;					      <
+							      <
+							      <
+}							      <
+							      <
+
+
+
+//generates exactly 1 line of errors on the lattice	      |	// Given the locations of two syndromes with a non-trivial sy
+							      |	// connecting the two syndromes.
+void Lattice::generateline()				      |	void Lattice::correctLine ( int x1Loc, int y1Loc, int x2Loc, 
+{								{
+    int x1 =  -1;					      <
+    int y1 = -1;					      <
+
+    int x2 =  -1;					      |	    // Initialize x1, y1, x2, y2 so that we can correct error
+    int y2 = -1;					      |	    // the SE or SW direction coming from coordinates 1 to co
+							      |	    int x1, y1, x2, y2;
+							      |	    if ( (y1Loc < y2Loc && y2Loc - y1Loc < ySize - y2Loc + y1
+							      |	            (y2Loc < y1Loc && y1Loc - y2Loc > ySize - y1Loc +
+							      <
+    while(true)						      <
+    {								    {
+							      >	        x1 = x1Loc;
+							      >	        y1 = y1Loc;
+							      >	        x2 = x2Loc;
+							      >	        y2 = y2Loc;
+							      >	    }
+							      >	    else
+							      >	    {
+							      >	        x1 = x2Loc;
+							      >	        y1 = y2Loc;
+							      >	        x2 = x1Loc;
+							      >	        y2 = y1Loc;
+							      >	    }
+
+        x1 =  rand()%xSize;	//element [0,xSize]	      |	    // Determine if we need to go to SE or SW
+        y1 = rand()%ySize;	//element [0,ySize]	      |	    bool east;
+							      |	    if ( (x1 < x2 && x2 - x1 <  xSize - x2 + x1) ||
+        x2 =  rand()%xSize;	//element [0,xSize]	      |	            (x2 < x1 && x1 - x2 >  xSize - x1 + x2) )
+        y2 = rand()%ySize;	//element [0,ySize]	      |	        east = true;
+							      |	    else
+        //no syndrome at X Octagons erlaubt		      |	        east = false;
+        if ( (!(x1%2) && !(y1%2)) || (!(x2%2) && !(y2%2)))    <
+        {						      <
+            continue;					      <
+        }						      <
+
+							      >	    if (debug1) cout << "Correcting line x1=" << x1 << " y1="
+
+							      >	    // correct in the southbound direction first
+							      >	    while (y1 != y2)
+							      >	    {
+							      >	        y1 = (y1 + 2) % (ySize);
+							      >	        correct ( x1, (y1-1+ySize) % ySize);
+							      >	    }
+
+        //if we have generated two different points stop the  |	    // if correction in SE direction
+        if ((x1 != x2 || y1 != y2)    )			      |	    if (east)
+							      >	    {
+							      >	        while (x1 != x2)
+        {							        {
+            break;					      |	            x1 = (x1 + 2) % (xSize);
+							      >	            correct ( (x1-1+xSize) % xSize, y1);
+        }							        }
+							      |	        // if correction in SW direction
+    }								    }
+							      |	    else
+							      <
+							      <
+							      <
+    correctLine( x1, y1, x2, y2);			      <
+							      <
+							      <
+}//end of generateline					      <
+							      <
+							      <
+							      <
+//returns true if there is no error syndrome anywhere on the  <
+							      <
+bool Lattice::is_corrected()				      <
+{							      <
+							      <
+							      <
+							      <
+    // Identify vertices that represent squares/octagons with <
+							      <
+							      <
+    for (int i = 0; i < xSize; i++)			      <
+    {								    {
+        for (int j = 0; j < ySize; j++)			      |	        while (x1 != x2)
+        {							        {
+            bool syndrome = false;			      |	            x1 = (x1 -2 + xSize) % (xSize);
+// if i,j both odd do OCT-Z-syndrome (detects X Errors)	      |	            correct ( (x1+1) % xSize, y1);
+							      <
+            if ( ((i%2) && (j%2)) )			      <
+            {						      <
+                syndrome = OCTsyndromeZZZZZZZZ(i,j,0);	      <
+            }						      <
+//if exactly  one of i and j is odd and one is even do SQ-Z-S <
+							      <
+            if (  (i%2 && !(j%2))   ||   (!(i%2) && j%2) )    <
+            {						      <
+                syndrome = SQsyndromeZZZZ(i,j,0);	      <
+            }						      <
+							      <
+							      <
+// if one of the above has a syndrome			      <
+            if (syndrome)				      <
+            {						      <
+                return false;				      <
+            }						      <
+//otherwise go further					      <
+        }							        }
+    }								    }
+							      <
+							      <
+							      <
+//if there was no syndrome anywhere			      <
+    return true;					      <
+							      <
+							      <
+}								}
+
+
+							      <
+							      <
+							      <
+							      <
+							      <
+// Generates logical operator  Z1, or Z2 on this lattice whic	// Generates logical operator  Z1, or Z2 on this lattice whic
+Operator* Lattice::getLogical(string whichOp)			Operator* Lattice::getLogical(string whichOp)
+{								{
+
+    //number of qubits					      <
+    Operator *myOp = new Operator (xSize*ySize/2*4);	      <
+
+    for (int i = 0, l = 0; i < xSize; i++)		      |	    Operator *myOp = new Operator (xSize*ySize/2);
+							      >
+							      >	    for (int i = 0, k = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            for (int k = 0; k < zSize; k++)		      |	            if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+							      >	                continue;
+							      >	            if (whichOp == "Z1")
+            {							            {
+							      |	                if (i == 0)
+                if ( which_cell_type(i,j) == octo || (k == 0) <
+                {					      <
+                    if(debug8)				      <
+                    {					      <
+                        cout<<"continue"<<endl;		      <
+                    }					      <
+                    continue;				      <
+							      <
+                }					      <
+							      <
+                if (whichOp == "Z1")			      <
+                {					      <
+                    //first line squares		      <
+                    if (((i == 0) && which_cell_type(i,j) ==  <
+                    {					      <
+                        if(debug8)			      <
+                        {				      <
+                            cout<<"Z"<<endl;		      <
+                        }				      <
+                        myOp->ops[l] = Z;		      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        if(debug8)			      <
+                        {				      <
+                            cout<<"I"<<endl;		      <
+                        }				      <
+                        myOp->ops[l] = I;		      <
+                    }					      <
+                }					      <
+                else if (whichOp == "Z2")		      <
+                {						                {
+                    //first column squares		      |	                    myOp->ops[k] = Z;
+                    if ((j == 0 && which_cell_type(i,j) == sq <
+                    {					      <
+                        if(debug8)			      <
+                        {				      <
+                            cout<<"Z"<<endl;		      <
+                        }				      <
+                        myOp->ops[l] = Z;		      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        if(debug8)			      <
+                        {				      <
+                            cout<<"I"<<endl;		      <
+                        }				      <
+                        myOp->ops[l] = I;		      <
+                    }					      <
+                }						                }
+                else					      |	            }
+							      >	            else if (whichOp == "Z2")
+							      >	            {
+							      >	                if (j == 0)
+                {						                {
+                    assert (0);				      |	                    myOp->ops[k] = Z;
+                }						                }
+                l++;					      |	            }
+							      |	            else
+            }//endofk					      |	            {
+        }//endofj					      |	                assert (0);
+    }//endofi						      |	            }
+							      >	            k++;
+							      >	        }
+							      >	    }
+
+    return myOp;						    return myOp;
+}								}
+
+
+// Examimes ErrInit and ErrGuess to determine if error correc	// Examimes ErrInit and ErrGuess to determine if error correc
+// Multiplies ErrGuess with operator p.				// Multiplies ErrGuess with operator p.
+bool Lattice::success(void)					bool Lattice::success(void)
+{								{
+
+    // Calculate O = E * E_guessed				    // Calculate O = E * E_guessed
+    Operator E(0), EGuessP(0);					    Operator E(0), EGuessP(0);
+							      >
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+            for (int k = 0; k < zSize; k++)		      |	            if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+            {						      |	                continue;
+                if ((k == 0) || (i%2 && j%2) || (!(i%2) && !( |
+                {					      |	            E.pushBack (cells[i][j]->ErrInit->ops[0]);
+                    continue;				      |	            EGuessP.pushBack (cells[i][j]->ErrGuess->ops[0]);
+                }					      |	            //ECurrent.pushBack (cells[i][j]->ErrCurrent->ops
+
+                E.pushBack (cells[i][j][k]->ErrInit->ops[0]); <
+                EGuessP.pushBack (cells[i][j][k]->ErrGuess->o <
+                //ECurrent.pushBack (cells[i][j]->ErrCurrent- <
+            }						      <
+        }							        }
+    }								    }
+    Operator O = E * EGuessP;					    Operator O = E * EGuessP;
+							      <
+    /*								    /*
+    	Debug							    	Debug
+
+      Operator  ECurrent(0);					      Operator  ECurrent(0);
+      //O and ECurrent should be the same			      //O and ECurrent should be the same
+    	cout<<endl<<"E: ";					    	cout<<endl<<"E: ";
+    	E.printState();						    	E.printState();
+    	cout<<endl<<"G: ";					    	cout<<endl<<"G: ";
+    	EGuessP.printState();					    	EGuessP.printState();
+    	cout<<endl<<"O: ";					    	cout<<endl<<"O: ";
+    	O.printState();						    	O.printState();
+    	cout<<endl<<"C: ";					    	cout<<endl<<"C: ";
+    	ECurrent.printState();					    	ECurrent.printState();
+    	cout<<endl<<endl;					    	cout<<endl<<endl;
+    */								    */
+
+							      >
+							      >
+							      >
+							      >
+    // Generate logical operators  Z1, Z2			    // Generate logical operators  Z1, Z2
+
+    Operator *Z1 = getLogical("Z1");				    Operator *Z1 = getLogical("Z1");
+    Operator *Z2 = getLogical("Z2");				    Operator *Z2 = getLogical("Z2");
+
+    assert ( Z1->commute(*Z2));					    assert ( Z1->commute(*Z2));
+    if (debug7)						      <
+    {							      <
+        cout<<"E0: ";					      <
+        E.printState();					      <
+        cout<<endl;					      <
+        cout<<"EG: ";					      <
+        EGuessP.printState();				      <
+        cout<<endl;					      <
+        cout<<"Ob: ";					      <
+        O.printState();					      <
+        cout<<endl;					      <
+        cout<<"Z1: ";					      <
+        Z1->printState();				      <
+        cout<<endl;					      <
+							      <
+    }							      <
+
+    // Determine result of error correction			    // Determine result of error correction
+    bool result = true;						    bool result = true;
+//if ( !O.commute(*Z1) || !O.commute(*Z2) ) {		      |	    //if ( !O.commute(*Z1) || !O.commute(*Z2))
+    if ( !O.commute(*Z2)  )				      |	    if ( !O.commute(*Z1) )
+    {							      <
+        result = false;						        result = false;
+    }							      <
+
+    delete Z1;							    delete Z1;
+    delete Z2;							    delete Z2;
+							      |	    if (debug3)
+							      >	    {
+							      >	        cout<<"Return Result Success =  "<<result<<endl;
+							      >	    }
+    return result;						    return result;
+							      <
+							      <
+}								}
+
+
+// Print the current 2Dstate of the lattice. The content of E |	// Print the current state of the lattice. The content of Err
+void Lattice::print2DState(void)			      |	void Lattice::printState(void)
+{								{
+
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int j = 0; j < ySize; j++)				        for (int j = 0; j < ySize; j++)
+        {							        {
+
+
+
+							      |	            if ((i%2 && j%2) || (!(i%2) && !(j%2)))
+            if (i==1 && !(j%2))  //j=1,3,5is syndrome,0,2,4 i <
+            {						      <
+                cells[i][j][1]->ErrCurrent->printState();     <
+                if (SQsyndromeZZZZ (i, j, 0))		      <
+                {					      <
+                    cout<<"-";				      <
+                }					      <
+                else					      <
+                {					      <
+                    cout<<"+";				      <
+                }					      <
+                cells[i][j][2]->ErrCurrent->printState();     <
+							      <
+            }						      <
+            else if (i==1 && j%2)			      <
+            {							            {
+                if (OCTsyndromeZZZZZZZZ (i, j, 0))	      |	                continue;
+                {					      <
+                    cout<<" - ";			      <
+                }					      <
+                else					      <
+                {					      <
+                    cout<<" + ";			      <
+                }					      <
+            }							            }
+
+        }//endofj					      <
+    }//endofi						      <
+    cout<<endl;						      <
+}							      <
+							      <
+							      <
+
+							      >	            cells[i][j]->ErrCurrent->printState();
+
+
+
+// Print the current state of the lattice. The content of Err <
+void Lattice::printState(void)				      <
+{							      <
+							      <
+    for (int i = 0; i < xSize; i++)			      <
+    {							      <
+        for (int j = 0; j < ySize; j++)			      <
+        {						      <
+            for (int k = 0; k < zSize; k++)		      <
+            {						      <
+                if ((k == 0) || (i%2 && j%2) || (!(i%2) && !( <
+                    continue;				      <
+                cout << "Error at location X=" << i << " Y="  <
+                cells[i][j][k]->ErrCurrent->printState();     <
+                cout<< endl;				      <
+            }						      <
+        }							        }
+    }								    }
+}								}
+
+// Print the current state of the QB lattice. The content of  |	// Print the current 2Dstate of the lattice. The content of E
+void Lattice::printStateQB(void)			      |	void Lattice::print2DState(void)
+{								{
+    cout<<"Print Lattice State"<<endl;			      <
+
+    for (int i = 0; i < xSize; i++)				    for (int i = 0; i < xSize; i++)
+    {								    {
+        for (int l = 0; l < 3; l++)			      |	        for (int j = 0; j < ySize; j++)
+        {							        {
+            for (int j = 0; j < ySize; j++)		      <
+            {						      <
+							      <
+                if ( (i%2 && j%2) || (!(i%2) && !(j%2)))      <
+                {					      <
+							      <
+                    if (l==1)				      <
+                    {					      <
+                        if(i%2 && j%2)			      <
+                        {				      <
+                            cout<< "    ";		      <
+                            // if there is syndrome print -   <
+                            //if(OCTsyndromeZZZZZZZZ(i,j)){co <
+                            cout<<"    ";		      <
+                            continue;			      <
+                        }				      <
+                        else				      <
+                        {				      <
+                            cout<< "         ";		      <
+                            continue;			      <
+                        }				      <
+							      <
+                    }					      <
+                    else				      <
+                    {					      <
+                        cout<< "         ";		      <
+                        continue;			      <
+                    }					      <
+                }					      <
+							      <
+							      <
+
+                if (l==0)				      <
+                {					      <
+                    cout<<" ";				      <
+                    cells[i][j][1]->ErrCurrent->printState(); <
+                    cout<<" --- ";			      <
+                    cells[i][j][2]->ErrCurrent->printState(); <
+                    cout<<" ";				      <
+
+
+                }					      |	            if (i==1 && !(j%2))  //j=1,3,5is syndrome,0,2,4 i
+                else if (l==1)				      |	            {
+							      >	                cells[i][j]->ErrCurrent->printState();
+							      >	            }
+							      >	            else if (i==1 && j%2)
+							      >	            {
+							      >	                if (syndromeZZZZ (i, j, 0))
+                {						                {
+                    cout<<"  | ";			      |	                    cout<<"-";
+                    //if there is syndrome print -	      <
+                    //if(SQsyndromeZZZZ(i,j)){cout<<"-";} els <
+                    cout <<" |  ";			      <
+                }						                }
+                else if (l==2)				      |	                else
+                {						                {
+                    cout<<" ";				      |	                    cout<<"+";
+                    cells[i][j][3]->ErrCurrent->printState(); <
+                    cout<<" --- ";			      <
+                    cells[i][j][4]->ErrCurrent->printState(); <
+                    cout<<" ";				      <
+                }						                }
+							      >	            }
+							      >	        }
+							      >	    }
+							      >	    cout<<endl;
+							      >	}
+
+
+
+							      >	// Print the current 2Dstate of the Initialized Error of the 
+							      >	void Lattice::print2DInit(void)
+							      >	{
+
+							      >	    for (int i = 0; i < xSize; i++)
+							      >	    {
+							      >	        for (int j = 0; j < ySize; j++)
+							      >	        {
+
+
+
+							      |	            if (i==1 && !(j%2))  //j=1,3,5is syndrome,0,2,4 i
+							      |	            {
+							      |	                cells[i][j]->ErrInit->printState();
+            }//end of j					      |	            }
+            cout<<endl;					      |	            else if (i==1 && j%2)
+        }// end of l					      |	            {
+        cout<<endl;					      |	                cout<<"O";
+							      |	            }
+							      |	        }
+							      |	    }
+    }//end of i						      |	    cout<<endl;
+}//end of print						      |	}
+							      <
+							      <
+							      <
+							      <
+							      <
+
+//end of file lattice.cc					//end of file lattice.cc

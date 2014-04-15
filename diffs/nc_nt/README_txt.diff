@@ -1,0 +1,62 @@
+----------------------------------				----------------------------------
+      TORIC CODE SIMULATOR					      TORIC CODE SIMULATOR
+
+	Tobias Hoelzer							Tobias Hoelzer
+	September 2013							September 2013
+	Institute for Quantum Information				Institute for Quantum Information
+	RWTH Aachen University						RWTH Aachen University
+	Bachelor Thesis: Study of [[4,2,2]]-concatenated tori		Bachelor Thesis: Study of [[4,2,2]]-concatenated tori
+
+
+	based on the works of						based on the works of
+
+      Martin Suchara						      Martin Suchara
+      UC Berkeley, 2012						      UC Berkeley, 2012
+----------------------------------				----------------------------------
+
+
+
+VERSION DESCRIPTION:						VERSION DESCRIPTION:
+
+Toric code threshold simulator that assumes that syndrome mea |	Toric code threshold simulator that assumes that syndrome mea
+							      <
+This version is only slightly different than the one from Mar <
+Only Z and Y errors are removed.			      <
+
+
+1.1 COMPILATION							1.1 COMPILATION
+
+To compile type make clean; make.				To compile type make clean; make.
+To run the simulation type ./qecsim.				To run the simulation type ./qecsim.
+							      >	To run the simulation with a certain number of threads type 
+							      >		*NUM_OF_THREADS=X && ./qecsim
+							      >	or sometimes
+							      >		*export OMP_NUM_THREADS=16 && ./qecsim
+							      >	to set  the variable for parallel computing
+
+
+Some compilers may experience problems with the order of comm	Some compilers may experience problems with the order of comm
+
+
+
+1.2 SIMULATION PARAMETERS					1.2 SIMULATION PARAMETERS
+
+The simulation parameters are specified in in/parameters.txt.	The simulation parameters are specified in in/parameters.txt.
+
+XSize = 2 4 6							XSize = 2 4 6
+iterations = 100000						iterations = 100000
+pMin = 0.001							pMin = 0.001
+pMax = 0.1							pMax = 0.1
+pStep = 0.001							pStep = 0.001
+							      |	q_factor = 1.0
+
+The first line specifies the lattice sizes that the simulator	The first line specifies the lattice sizes that the simulator
+
+The following three lines specify how is the error in each it	The following three lines specify how is the error in each it
+
+							      >	The last lines determine the error probability of the syndrom
+							      >	The error probability for a syndrome check is q=p*q_factor.
+
+1.3 SIMULATION OUTPUT						1.3 SIMULATION OUTPUT
+
+The simulation result is saved in the out directory in separa	The simulation result is saved in the out directory in separa

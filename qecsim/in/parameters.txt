@@ -1,0 +1,9 @@
+XSize = 24
+iterations = 1000
+pMin = 0.02
+pMax = 0.03
+pStep = 0.001
+is_concatenated = 1
+is_noisy = 1
+p_sqr_factor = 1.0
+p_oct_factor = 1.0

@@ -1,0 +1,55 @@
+#ifndef OPERATOR_H						#ifndef OPERATOR_H
+#define OPERATOR_H						#define OPERATOR_H
+
+#include <stdlib.h>						#include <stdlib.h>
+#include <string>						#include <string>
+#include <stdio.h>						#include <stdio.h>
+#include <iostream>						#include <iostream>
+#include <sstream>						#include <sstream>
+#include <assert.h>						#include <assert.h>
+#include <vector>						#include <vector>
+//for rand and srand()					      <
+#include <cstdlib>					      <
+#include <ctime>					      <
+							      <
+							      <
+
+
+using namespace std;						using namespace std;
+
+//typedef will probably  be ignored, enabled by default so fo |
+//typedef enum pauli {I, X, Y, Z};			      |	typedef enum pauli {I, X, Y, Z};
+enum pauli {I, X, Y, Z};				      <
+pauli operator*(pauli p, pauli q);				pauli operator*(pauli p, pauli q);
+
+
+class Operator							class Operator
+{								{
+public:								public:
+    int size;							    int size;
+    vector<pauli> ops;						    vector<pauli> ops;
+
+    Operator (int newSize);					    Operator (int newSize);
+    Operator (const Operator & p);				    Operator (const Operator & p);
+    void pushBack (pauli & op);					    void pushBack (pauli & op);
+    bool commute (Operator & op);				    bool commute (Operator & op);
+    void generateRandom (double & p);				    void generateRandom (double & p);
+							      >	    pauli generateRandomPauli (double & p);
+    friend Operator operator*(const Operator & p, const Opera	    friend Operator operator*(const Operator & p, const Opera
+    friend bool operator==(const Operator & p, const Operator	    friend bool operator==(const Operator & p, const Operator
+    friend bool operator<(const Operator & p, const Operator 	    friend bool operator<(const Operator & p, const Operator 
+    bool identity (void);					    bool identity (void);
+    void printState (void);					    void printState (void);
+};								};
+
+
+struct operatorCompare						struct operatorCompare
+{								{
+    bool operator()(const Operator* p, const Operator* q) con	    bool operator()(const Operator* p, const Operator* q) con
+    {								    {
+        return *p < *q;						        return *p < *q;
+    }								    }
+};								};
+
+
+#endif								#endif
