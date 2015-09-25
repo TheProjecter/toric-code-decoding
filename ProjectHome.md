@@ -1,0 +1,1 @@
+Advances on code presented in http://www.physik.rwth-aachen.de/fileadmin/user_upload/www_physik/Institute/Inst_QI/Theses/bachelor/hoelzer2013.pdf by profiling, eliminating costly steps, and/or switching to a renormalization-group decoder.
